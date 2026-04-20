@@ -1,0 +1,16 @@
+int attr containerStyle 0x0
+int color highlight_color 0x0
+int color saving_overlay_background_color 0x0
+int color selected_highlight_color 0x0
+int id errorTextView 0x0
+int id pdfContentLayout 0x0
+int id pdfLoadingProgressBar 0x0
+int id pdfSearchView 0x0
+int id savingProgressBar 0x0
+int id savingProgressOverlay 0x0
+int id saving_overlay_container 0x0
+int id toolBoxView 0x0
+int layout pdf_viewer_fragment 0x0
+int layout saving_progress_overlay 0x0
+int[] styleable PdfViewerFragment { 0x0 }
+int styleable PdfViewerFragment_containerStyle 0

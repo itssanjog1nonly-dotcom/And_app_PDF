@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AnnotationColorSwatch">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginHorizontal">6dp</item>
+        <item name="android:background">@drawable/bg_color_swatch_unselected</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:contentDescription">Color Swatch</item>
+    </style>
+
+    <style name="AnnotationToolbarButton">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:padding">14dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="tint">@color/white</item>
+    </style>
+</resources>

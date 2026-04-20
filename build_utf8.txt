@@ -1,0 +1,615 @@
+﻿> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:dataBindingMergeDependencyArtifactsDebug UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:dataBindingGenBaseClassesDebug UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+
+> Task :app:compileDebugKotlin FAILED
+.\gradlew.bat : e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollr
+eader/ui/fragment/PdfViewerFragment.kt:115:9 Overload resolution ambiguity between candidates:
+At line:1 char:1
++ .\gradlew.bat compileDebugKotlin > build_output.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (e: file:///D:/U...een candidates::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+fun setupWindowInsets(): Unit
+fun setupWindowInsets(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:117:13 Overload resolution ambiguity between candidates:
+fun setupPdfFragment(): Unit
+fun setupPdfFragment(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:119:9 Overload resolution ambiguity between candidates:
+fun setupFab(): Unit
+fun setupFab(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:120:9 Overload resolution ambiguity between candidates:
+fun setupDurationControls(): Unit
+fun setupDurationControls(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:121:9 Overload resolution ambiguity between candidates:
+fun setupAnnotationButton(): Unit
+fun setupAnnotationButton(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:184:13 Unresolved reference 'updateColorSwatchSelection'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:190:13 Unresolved reference 'updateColorSwatchSelection'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:197:13 Unresolved reference 'updateColorSwatchSelection'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:337:9 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:408:16 Unresolved reference 'AttributeSet'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:456:26 Unresolved reference 'initialColor'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:472:14 Conflicting overloads:
+fun onPause(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:477:13 Conflicting overloads:
+fun setupAnnotationButton(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:498:13 Conflicting overloads:
+fun launchExternalEditor(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:502:13 Conflicting overloads:
+fun handleTouchInteraction(event: MotionEvent): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:526:13 Conflicting overloads:
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:575:17 Overload resolution ambiguity between candidates:
+fun hideInternalEditButtons(view: View): Unit
+fun hideInternalEditButtons(view: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:582:13 Conflicting overloads:
+fun hideInternalEditButtons(view: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:607:17 Overload resolution ambiguity between candidates:
+fun hideInternalEditButtons(view: View): Unit
+fun hideInternalEditButtons(view: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:612:13 Conflicting overloads:
+fun saveAnnotationsIfNeeded(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:616:13 Conflicting overloads:
+fun setupWindowInsets(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:655:17 Conflicting declarations:
+var pageDelegate: InkCanvasView.PageDelegate?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:657:13 Conflicting overloads:
+fun setupPageDelegate(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:669:9 Overload resolution ambiguity between candidates:
+var pageDelegate: InkCanvasView.PageDelegate?
+var pageDelegate: InkCanvasView.PageDelegate?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:734:47 Overload resolution ambiguity between candidates:
+var pageDelegate: InkCanvasView.PageDelegate?
+var pageDelegate: InkCanvasView.PageDelegate?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:738:13 Conflicting overloads:
+fun setupPdfFragment(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:750:21 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:757:77 Unresolved reference 'java'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:759:53 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:779:60 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:789:33 Overload resolution ambiguity between candidates:
+fun setupPageIndicator(scrollableView: View): Unit
+fun setupPageIndicator(scrollableView: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:790:33 Overload resolution ambiguity between candidates:
+fun setupPageDelegate(): Unit
+fun setupPageDelegate(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:792:33 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:796:37 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:820:13 Conflicting overloads:
+fun safeSetToolboxVisible(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:821:9 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:824:13 Conflicting overloads:
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:828:29 Overload resolution ambiguity between candidates:
+fun findRecyclerView(view: View): RecyclerView?
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:829:43 Return type mismatch: expected 'androidx.recyclerview.widget.RecyclerView?', actual 
+'kotlin.Any'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:835:13 Conflicting overloads:
+fun getPdfPageCount(pdfView: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:854:13 Conflicting overloads:
+fun getTrueVerticalScrollRange(rv: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:855:29 Overload resolution ambiguity between candidates:
+fun getVerticalScrollRange(view: View): Int
+fun getVerticalScrollRange(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:856:83 Overload resolution ambiguity between candidates:
+fun getPdfPageCount(pdfView: View): Int
+fun getPdfPageCount(pdfView: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:885:13 Conflicting overloads:
+fun getVerticalScrollRange(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:886:54 Overload resolution ambiguity between candidates:
+fun findRecyclerView(view: View): RecyclerView?
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:901:13 Conflicting overloads:
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:918:13 Conflicting overloads:
+fun setupPageIndicator(scrollableView: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:922:24 Overload resolution ambiguity between candidates:
+fun findRecyclerView(view: View): RecyclerView?
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:931:13 Overload resolution ambiguity between candidates:
+fun handleTouchInteraction(event: MotionEvent): Unit
+fun handleTouchInteraction(event: MotionEvent): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:936:13 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:943:13 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:961:21 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:968:9 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:971:13 Conflicting overloads:
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:990:22 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:991:21 Overload resolution ambiguity between candidates:
+fun getVerticalScrollRange(view: View): Int
+fun getVerticalScrollRange(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:994:19 'operator' modifier is required on 'FirNamedFunctionSymbol kotlin/compareTo' in 
+'compareTo'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1009:13 Conflicting overloads:
+fun setupFab(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1012:17 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1014:17 Overload resolution ambiguity between candidates:
+fun startAutoScroll(): Unit
+fun startAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1019:13 Conflicting overloads:
+fun startAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1023:9 Overload resolution ambiguity between candidates:
+fun updateFabIcon(isPlaying: Boolean): Unit
+fun updateFabIcon(isPlaying: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1029:26 Overload resolution ambiguity between candidates:
+fun getTrueVerticalScrollRange(rv: View): Int
+fun getTrueVerticalScrollRange(rv: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1059:41 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1080:41 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1082:41 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1098:49 Overload resolution ambiguity between candidates:
+fun getPdfPageCount(pdfView: View): Int
+fun getPdfPageCount(pdfView: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1103:37 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1126:13 Conflicting overloads:
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1130:9 Overload resolution ambiguity between candidates:
+fun updateFabIcon(isPlaying: Boolean): Unit
+fun updateFabIcon(isPlaying: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1134:13 Conflicting overloads:
+fun setupDurationControls(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1135:9 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1139:13 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1140:13 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1145:13 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1146:13 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1150:13 Overload resolution ambiguity between candidates:
+fun showDurationPickerDialog(): Unit
+fun showDurationPickerDialog(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1154:13 Conflicting overloads:
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1160:13 Conflicting overloads:
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1162:13 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1163:13 Overload resolution ambiguity between candidates:
+fun startAutoScroll(): Unit
+fun startAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1167:13 Conflicting overloads:
+fun showDurationPickerDialog(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1204:17 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1205:17 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1211:13 Conflicting overloads:
+fun updateFabIcon(isPlaying: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1218:14 Conflicting overloads:
+fun onPause(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1223:13 Conflicting overloads:
+fun setupAnnotationButton(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1244:13 Conflicting overloads:
+fun launchExternalEditor(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1248:13 Conflicting overloads:
+fun handleTouchInteraction(event: MotionEvent): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1272:13 Conflicting overloads:
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1321:17 Overload resolution ambiguity between candidates:
+fun hideInternalEditButtons(view: View): Unit
+fun hideInternalEditButtons(view: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1328:13 Conflicting overloads:
+fun hideInternalEditButtons(view: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1353:17 Overload resolution ambiguity between candidates:
+fun hideInternalEditButtons(view: View): Unit
+fun hideInternalEditButtons(view: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1358:13 Conflicting overloads:
+fun saveAnnotationsIfNeeded(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1362:13 Conflicting overloads:
+fun setupWindowInsets(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1401:17 Conflicting declarations:
+var pageDelegate: InkCanvasView.PageDelegate?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1403:13 Conflicting overloads:
+fun setupPageDelegate(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1415:9 Overload resolution ambiguity between candidates:
+var pageDelegate: InkCanvasView.PageDelegate?
+var pageDelegate: InkCanvasView.PageDelegate?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1480:47 Overload resolution ambiguity between candidates:
+var pageDelegate: InkCanvasView.PageDelegate?
+var pageDelegate: InkCanvasView.PageDelegate?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1484:13 Conflicting overloads:
+fun setupPdfFragment(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1496:21 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1503:77 Unresolved reference 'java'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1505:53 Cannot infer type for this parameter. Please specify it explicitly.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1525:60 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1535:33 Overload resolution ambiguity between candidates:
+fun setupPageIndicator(scrollableView: View): Unit
+fun setupPageIndicator(scrollableView: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1536:33 Overload resolution ambiguity between candidates:
+fun setupPageDelegate(): Unit
+fun setupPageDelegate(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1538:33 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1542:37 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1566:13 Conflicting overloads:
+fun safeSetToolboxVisible(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1567:9 Overload resolution ambiguity between candidates:
+fun setAnnotationUiState(visible: Boolean): Unit
+fun setAnnotationUiState(visible: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1570:13 Conflicting overloads:
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1574:29 Overload resolution ambiguity between candidates:
+fun findRecyclerView(view: View): RecyclerView?
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1575:43 Return type mismatch: expected 'androidx.recyclerview.widget.RecyclerView?', actual 
+'kotlin.Any'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1581:13 Conflicting overloads:
+fun getPdfPageCount(pdfView: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1600:13 Conflicting overloads:
+fun getTrueVerticalScrollRange(rv: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1601:29 Overload resolution ambiguity between candidates:
+fun getVerticalScrollRange(view: View): Int
+fun getVerticalScrollRange(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1602:83 Overload resolution ambiguity between candidates:
+fun getPdfPageCount(pdfView: View): Int
+fun getPdfPageCount(pdfView: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1631:13 Conflicting overloads:
+fun getVerticalScrollRange(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1632:54 Overload resolution ambiguity between candidates:
+fun findRecyclerView(view: View): RecyclerView?
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1647:13 Conflicting overloads:
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1664:13 Conflicting overloads:
+fun setupPageIndicator(scrollableView: View): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1668:24 Overload resolution ambiguity between candidates:
+fun findRecyclerView(view: View): RecyclerView?
+fun findRecyclerView(view: View): RecyclerView?
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1677:13 Overload resolution ambiguity between candidates:
+fun handleTouchInteraction(event: MotionEvent): Unit
+fun handleTouchInteraction(event: MotionEvent): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1682:13 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1689:13 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1707:21 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1714:9 Overload resolution ambiguity between candidates:
+fun updatePageIndicator(): Unit
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1717:13 Conflicting overloads:
+fun updatePageIndicator(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1736:22 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1737:21 Overload resolution ambiguity between candidates:
+fun getVerticalScrollRange(view: View): Int
+fun getVerticalScrollRange(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1740:19 'operator' modifier is required on 'FirNamedFunctionSymbol kotlin/compareTo' in 
+'compareTo'.
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1755:13 Conflicting overloads:
+fun setupFab(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1758:17 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1760:17 Overload resolution ambiguity between candidates:
+fun startAutoScroll(): Unit
+fun startAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1765:13 Conflicting overloads:
+fun startAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1769:9 Overload resolution ambiguity between candidates:
+fun updateFabIcon(isPlaying: Boolean): Unit
+fun updateFabIcon(isPlaying: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1775:26 Overload resolution ambiguity between candidates:
+fun getTrueVerticalScrollRange(rv: View): Int
+fun getTrueVerticalScrollRange(rv: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1805:41 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1826:41 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1828:41 Overload resolution ambiguity between candidates:
+fun getVerticalScrollOffset(view: View): Int
+fun getVerticalScrollOffset(view: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1844:49 Overload resolution ambiguity between candidates:
+
+[Incubating] Problems report is available at: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/build/reports/problems/problems-report.html
+fun getPdfPageCount(pdfView: View): Int
+fun getPdfPageCount(pdfView: View): Int
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1849:37 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1872:13 Conflicting overloads:
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1876:9 Overload resolution ambiguity between candidates:
+fun updateFabIcon(isPlaying: Boolean): Unit
+fun updateFabIcon(isPlaying: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1880:13 Conflicting overloads:
+fun setupDurationControls(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1881:9 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1885:13 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1886:13 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1891:13 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1892:13 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1896:13 Overload resolution ambiguity between candidates:
+fun showDurationPickerDialog(): Unit
+fun showDurationPickerDialog(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1900:13 Conflicting overloads:
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1906:13 Conflicting overloads:
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1908:13 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1909:13 Overload resolution ambiguity between candidates:
+fun startAutoScroll(): Unit
+fun startAutoScroll(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1913:13 Conflicting overloads:
+fun showDurationPickerDialog(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1950:17 Overload resolution ambiguity between candidates:
+fun updateDurationDisplay(): Unit
+fun updateDurationDisplay(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1951:17 Overload resolution ambiguity between candidates:
+fun restartScrollerIfIfRunning(): Unit
+fun restartScrollerIfIfRunning(): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1957:13 Conflicting overloads:
+fun updateFabIcon(isPlaying: Boolean): Unit
+e: file:///D:/Users/itssa/AndroidStudioProjects/PdfScrollReader/app/src/main/java/com/sanjog/pdfscrollreader/ui/fragmen
+t/PdfViewerFragment.kt:1966:9 Overload resolution ambiguity between candidates:
+fun stopAutoScroll(): Unit
+fun stopAutoScroll(): Unit
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> A failure occurred while executing 
+org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 5s
+16 actionable tasks: 1 executed, 15 up-to-date

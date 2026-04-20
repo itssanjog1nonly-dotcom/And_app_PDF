@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.PdfScrollReader" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Material 3 Primary Colors -->
+        <item name="colorPrimary">@color/colorAccentCyan</item>
+        <item name="colorOnPrimary">@color/colorBackgroundDark</item>
+        <item name="colorPrimaryContainer">@color/app_surface</item>
+        <item name="colorOnPrimaryContainer">@color/textColorPrimary</item>
+
+        <!-- Material 3 Secondary Colors -->
+        <item name="colorSecondary">@color/colorAccentPurple</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Background and Surface -->
+        <item name="android:windowBackground">@color/colorBackgroundDark</item>
+        <item name="colorSurface">@color/colorBackgroundDark</item>
+        <item name="colorOnSurface">@color/textColorPrimary</item>
+        <item name="colorSurfaceVariant">@color/colorGlassSurface</item>
+        <item name="colorOnSurfaceVariant">@color/textColorSecondary</item>
+        <item name="colorOutline">@color/colorGlassBorder</item>
+
+        <!-- Status and Navigation Bar -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        
+        <!-- Force Dark Mode Experience -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

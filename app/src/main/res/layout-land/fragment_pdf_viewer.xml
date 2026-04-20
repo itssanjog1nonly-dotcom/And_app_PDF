@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/pdf_viewer_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.sanjog.pdfscrollreader.ui.view.InkCanvasView
+        android:id="@+id/ink_canvas_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="@id/pdf_viewer_container"
+        app:layout_constraintBottom_toBottomOf="@id/pdf_viewer_container"
+        app:layout_constraintStart_toStartOf="@id/pdf_viewer_container"
+        app:layout_constraintEnd_toEndOf="@id/pdf_viewer_container" />
+
+    <LinearLayout
+        android:id="@+id/annotation_toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#CC1A1A1A"
+        android:elevation="20dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- This space will be filled with padding for status bar -->
+        <View
+            android:id="@+id/toolbar_status_bar_spacer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent" />
+
+            <LinearLayout
+                android:id="@+id/annotation_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+            android:divider="@drawable/bg_divider_vertical_spacer"
+            android:showDividers="middle">
+
+            <!-- Row 1: Tools & Actions -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                
+                <ImageButton android:id="@+id/btn_tool_pen" style="@style/AnnotationToolbarButton" android:src="@android:drawable/ic_menu_edit" android:contentDescription="Pen" />
+                <ImageButton android:id="@+id/btn_tool_highlighter" style="@style/AnnotationToolbarButton" android:src="@android:drawable/ic_menu_view" android:contentDescription="Highlighter" />
+                <ImageButton android:id="@+id/btn_tool_eraser" style="@style/AnnotationToolbarButton" android:src="@android:drawable/ic_menu_delete" android:contentDescription="Eraser" />
+                <ImageButton android:id="@+id/btn_tool_rect" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_rectangle" android:contentDescription="Rect" />
+                <ImageButton android:id="@+id/btn_tool_ellipse" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_circle" android:contentDescription="Ellipse" />
+                <ImageButton android:id="@+id/btn_tool_select_tap" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_pointer" android:contentDescription="Select" />
+                <ImageButton android:id="@+id/btn_tool_select_marquee" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_selection_marquee" android:contentDescription="Marquee" />
+                <ImageButton android:id="@+id/btn_tool_select_lasso" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_lasso" android:contentDescription="Lasso" />
+                <ImageButton android:id="@+id/btn_tool_select_lasso_fill" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_lasso_fill" android:contentDescription="Lasso Fill" />
+                
+                <View android:id="@+id/div_actions" android:layout_width="1dp" android:layout_height="32dp" android:background="#33FFFFFF" />
+                
+                <ImageButton android:id="@+id/btn_undo" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_undo" android:contentDescription="Undo" />
+                <ImageButton android:id="@+id/btn_delete_selection" style="@style/AnnotationToolbarButton" android:src="@android:drawable/ic_menu_delete" app:tint="#FFFF5252" android:visibility="gone" android:contentDescription="Delete" />
+                <ImageButton android:id="@+id/btn_redo" style="@style/AnnotationToolbarButton" android:src="@drawable/ic_redo" android:contentDescription="Redo" />
+                <ImageButton android:id="@+id/btn_clear_all" style="@style/AnnotationToolbarButton" android:src="@android:drawable/ic_input_delete" android:contentDescription="Clear" />
+                <ImageButton android:id="@+id/btn_exit_annotation" style="@style/AnnotationToolbarButton" android:src="@android:drawable/ic_menu_close_clear_cancel" android:contentDescription="Close" />
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flow_row1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:flow_wrapMode="aligned"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_horizontalGap="16dp"
+                    app:flow_verticalGap="12dp"
+                    app:constraint_referenced_ids="btn_tool_pen,btn_tool_highlighter,btn_tool_eraser,btn_tool_rect,btn_tool_ellipse,btn_tool_select_tap,btn_tool_select_marquee,btn_tool_select_lasso,btn_tool_select_lasso_fill,div_actions,btn_undo,btn_delete_selection,btn_redo,btn_clear_all,btn_exit_annotation" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1AFFFFFF" android:layout_marginVertical="4dp" />
+
+            <!-- Row 2: Colors & Sliders -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <HorizontalScrollView
+                    android:id="@+id/color_scroll_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:scrollbars="none">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <ImageButton android:id="@+id/btn_color_black" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/black" />
+                        <ImageButton android:id="@+id/btn_color_red" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/holo_red_light" />
+                        <ImageButton android:id="@+id/btn_color_blue" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/holo_blue_light" />
+                        <ImageButton android:id="@+id/btn_color_green" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/holo_green_light" />
+                        <ImageButton android:id="@+id/btn_color_white" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/white" />
+                        <ImageButton android:id="@+id/btn_color_custom" style="@style/AnnotationColorSwatch" android:src="@android:drawable/ic_menu_gallery" app:tint="@color/white" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <View android:id="@+id/div_settings" android:layout_width="1dp" android:layout_height="32dp" android:background="#33FFFFFF" />
+
+                <LinearLayout
+                    android:id="@+id/width_controls_group"
+                    android:layout_width="530dp"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="24dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PEN" android:textColor="@color/textColorSecondary" android:textSize="14sp" android:textStyle="bold"/>
+                    <SeekBar android:id="@+id/seekbar_pen_width" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:max="50" android:min="2" android:progress="8" android:paddingHorizontal="16dp"/>
+                    <EditText android:id="@+id/tv_pen_width_value" android:layout_width="40dp" android:layout_height="wrap_content" android:text="8" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" android:background="@android:color/transparent" android:inputType="number" android:imeOptions="actionDone" android:gravity="center" />
+                    
+                    <View android:layout_width="32dp" android:layout_height="0dp" />
+
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="HI" android:textColor="@color/textColorSecondary" android:textSize="14sp" android:textStyle="bold"/>
+                    <SeekBar android:id="@+id/seekbar_highlighter_width" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:max="80" android:min="10" android:progress="24" android:paddingHorizontal="16dp"/>
+                    <EditText android:id="@+id/tv_highlighter_width_value" android:layout_width="40dp" android:layout_height="wrap_content" android:text="24" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" android:background="@android:color/transparent" android:inputType="number" android:imeOptions="actionDone" android:gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_fill_alpha"
+                    android:layout_width="330dp"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    android:paddingHorizontal="24dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="FILL" android:textColor="@color/textColorSecondary" android:textSize="14sp" android:textStyle="bold"/>
+                    <SeekBar android:id="@+id/seekbar_fill_alpha" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:max="255" android:progress="0" android:paddingHorizontal="16dp"/>
+                    <TextView android:id="@+id/tv_fill_alpha_value" android:layout_width="48dp" android:layout_height="wrap_content" android:text="0%" android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold" android:gravity="center"/>
+                </LinearLayout>
+
+                <androidx.constraintlayout.helper.widget.Flow
+                    android:id="@+id/flow_row2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:flow_wrapMode="aligned"
+                    app:flow_horizontalStyle="packed"
+                    app:flow_horizontalGap="32dp"
+                    app:flow_verticalGap="12dp"
+                    app:constraint_referenced_ids="color_scroll_container,div_settings,width_controls_group,layout_fill_alpha" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!-- Custom Page Indicator -->
+    <TextView
+        android:id="@+id/tv_page_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_page_indicator"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:elevation="4dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Floating Bottom Controls Container -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/controls_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/control_bar_margin_bottom"
+        android:layout_marginEnd="@dimen/control_bar_margin_end"
+        android:paddingHorizontal="@dimen/control_bar_padding_horizontal"
+        android:paddingVertical="@dimen/control_bar_padding_vertical"
+        android:background="@drawable/bg_page_indicator"
+        android:elevation="@dimen/control_bar_elevation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.78">
+
+        <LinearLayout
+            android:id="@+id/layout_speed_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/speed_control_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/btn_time_minus"
+                android:layout_width="@dimen/icon_button_size"
+                android:layout_height="@dimen/icon_button_size"
+                android:text="−"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Decrease time"/>
+
+            <TextView
+                android:id="@+id/tv_duration_display"
+                android:layout_width="@dimen/duration_display_width"
+                android:layout_height="wrap_content"
+                android:text="03:40"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_duration"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:fontFamily="monospace"
+                android:background="?attr/selectableItemBackground"
+                android:padding="4dp"
+                android:contentDescription="Tap to set duration"/>
+
+            <ImageButton
+                android:id="@+id/btn_time_plus"
+                android:layout_width="@dimen/icon_button_size"
+                android:layout_height="@dimen/icon_button_size"
+                android:src="@android:drawable/ic_menu_add"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/white"
+                android:contentDescription="Increase time"/>
+
+            <TextView
+                android:id="@+id/tv_length_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginEnd="@dimen/spacing_large"
+                android:text="length"
+                android:textColor="#B0B0B0"
+                android:textSize="@dimen/text_size_label"
+                android:textStyle="bold"
+                android:textAllCaps="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/action_buttons_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toEndOf="@id/layout_speed_controls"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_auto_scroll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_medium"
+                android:src="@android:drawable/ic_media_play"
+                android:contentDescription="Play/Pause scroll"
+                app:backgroundTint="@color/accent_blue"
+                app:tint="@color/white"
+                app:fabSize="mini"
+                app:elevation="0dp"
+                app:pressedTranslationZ="0dp"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_annotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/spacing_medium"
+                android:src="@android:drawable/ic_menu_edit"
+                android:contentDescription="Annotate"
+                app:backgroundTint="#424242"
+                app:tint="@color/white"
+                app:fabSize="mini"
+                app:elevation="0dp"
+                app:pressedTranslationZ="0dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

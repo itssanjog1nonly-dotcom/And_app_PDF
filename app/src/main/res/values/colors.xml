@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_bg">#121212</color>
+    <color name="app_surface">#1E1E1E</color>
+    <color name="app_surface_2">#2A2A2A</color>
+    <color name="app_divider">#333333</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B0B0B0</color>
+    <color name="text_hint">#666666</color>
+    <color name="accent_blue">#1E88E5</color>
+    <color name="accent_blue_light">#64B5F6</color>
+    <color name="accent_cyan">#26C6DA</color>
+    <color name="toolbar_navy">#0D1B8E</color>
+    <color name="color_success">#4CAF50</color>
+    <color name="color_warning">#FF9800</color>
+    <color name="color_error">#F44336</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="ann_black">#212121</color>
+    <color name="ann_red">#EF5350</color>
+    <color name="ann_blue">#1E88E5</color>
+    <color name="ann_green">#66BB6A</color>
+    <color name="ann_yellow">#FFEE58</color>
+    <color name="ann_cyan">#26C6DA</color>
+    <color name="ann_white">#FFFFFF</color>
+    <color name="ann_orange">#FF9800</color>
+
+    <!-- Brand Palette: Dark Glassmorphism -->
+    <color name="colorBackgroundDark">#0B111A</color>
+    <color name="colorAccentCyan">#4DF0E4</color>
+    <color name="colorAccentPurple">#B285FF</color>
+    <color name="colorGlassSurface">#1AFFFFFF</color>
+    <color name="colorGlassBorder">#33FFFFFF</color>
+    <color name="textColorPrimary">#FFFFFFFF</color>
+    <color name="textColorSecondary">#CCFFFFFF</color>
+    <color name="colorScrimDark">#66000000</color>
+</resources>

@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Marquee Pen: Solid pen with a solid square box (avoiding dashed lines which fail in some build environments) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M14,14.25V18h3.75l7.06,-7.06l-3.75,-3.75L14,14.25z" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M2,2h14v14H2z" />
+</vector>

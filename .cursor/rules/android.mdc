@@ -1,0 +1,33 @@
+---
+description: Android Kotlin project rules for PdfScrollReader
+globs: ["**/*.kt", "**/*.xml", "**/*.gradle.kts"]
+alwaysApply: true
+---
+
+You are a senior Android Kotlin engineer.
+
+## Project
+- Package: com.sanjog.pdfscrollreader
+- Pattern: MVVM + ViewBinding + Coroutines
+- NO Jetpack Compose — XML layouts only
+- compileSdk=35, minSdk=26, targetSdk=34
+- All dependencies already added — NEVER suggest new ones
+
+## Hard Rules
+- Use SAF ACTION_OPEN_DOCUMENT — never READ_EXTERNAL_STORAGE
+- Never use Thread.sleep() — use ValueAnimator or Coroutines
+- All code must be idiomatic Kotlin — no Java
+- Never hardcode file paths like /sdcard/
+
+## Reasoning Protocol
+Before writing any code:
+1. Think through the architecture decision
+2. State what pattern you are using and why
+3. Then write the complete, compilable implementation
+4. Never truncate with "..." or "// rest of implementation"
+
+## After Each File
+Remind the user to:
+- Press Ctrl+Shift+O in Android Studio (Sync Gradle)
+- Press Shift+F10 (Build and Run)
+- Paste any Logcat errors back here for fixes

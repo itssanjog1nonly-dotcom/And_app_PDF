@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default / Phone dimensions -->
+    <dimen name="control_bar_padding_horizontal">12dp</dimen>
+    <dimen name="control_bar_padding_vertical">4dp</dimen>
+    <dimen name="control_bar_elevation">4dp</dimen>
+    <dimen name="control_bar_radius">16dp</dimen>
+    <dimen name="control_bar_margin_bottom">16dp</dimen>
+    <dimen name="control_bar_margin_end">16dp</dimen>
+
+    <dimen name="speed_control_height">40dp</dimen>
+    <dimen name="icon_button_size">32dp</dimen>
+    <dimen name="fab_size">40dp</dimen>
+
+    <dimen name="text_size_duration">18sp</dimen>
+    <dimen name="text_size_label">10sp</dimen>
+    <dimen name="duration_display_width">64dp</dimen>
+
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">12dp</dimen>
+</resources>
