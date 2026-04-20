@@ -1,19 +1,18 @@
 package com.sanjog.pdfscrollreader.ui.util
 
 import android.content.Context
-import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.view.InputDevice
 import android.view.MotionEvent
 
 object InputCapabilityUtils {
+    private const val FEATURE_TOUCHSCREEN_STYLUS = "android.hardware.touchscreen.stylus"
 
     /**
      * Checks if the device has a stylus connected or supported.
      */
     fun isStylusSupported(context: Context): Boolean {
         val packageManager = context.packageManager
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN_STYLUS)) {
+        if (packageManager.hasSystemFeature(FEATURE_TOUCHSCREEN_STYLUS)) {
             return true
         }
 

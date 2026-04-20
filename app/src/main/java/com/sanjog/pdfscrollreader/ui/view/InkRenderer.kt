@@ -6,28 +6,42 @@ import android.graphics.Paint
 import android.graphics.RectF
 
 class InkRenderer(private val view: InkCanvasView) {
-    
-    private val strokePaint = Paint().apply {
-        isAntiAlias = true
-        style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
-        strokeJoin = Paint.Join.ROUND
-    }
 
-    private val fillPaint = Paint().apply {
-        isAntiAlias = true
-        style = Paint.Style.FILL
-    }
+    private val strokePaint =
+        Paint().apply {
+            isAntiAlias = true
+            style = Paint.Style.STROKE
+            strokeCap = Paint.Cap.ROUND
+            strokeJoin = Paint.Join.ROUND
+        }
 
-    private val selectionPaint = Paint().apply {
-        isAntiAlias = true
-        style = Paint.Style.STROKE
-        strokeWidth = 3f
-        color = Color.parseColor("#FF2196F3")
-    }
+    private val fillPaint =
+        Paint().apply {
+            isAntiAlias = true
+            style = Paint.Style.FILL
+        }
+
+    private val selectionPaint =
+        Paint().apply {
+            isAntiAlias = true
+            style = Paint.Style.STROKE
+            strokeWidth = 3f
+            color = Color.parseColor("#FF2196F3")
+            pathEffect = android.graphics.DashPathEffect(floatArrayOf(10f, 10f), 0f)
+        }
+
+    private val selectionFillPaint =
+        Paint().apply {
+            isAntiAlias = true
+            style = Paint.Style.FILL
+            color = Color.parseColor("#202196F3")
+        }
 
     fun draw(canvas: Canvas) {
-        android.util.Log.d("INK_DEBUG", "draw: strokes=${view.strokes.size} activeStroke=${view.activeStroke != null} delegate=${view.pageDelegate != null} editingEnabled=${view.isEditingEnabled()}")
+        android.util.Log.d(
+            "INK_DEBUG",
+            "draw: strokes=${view.strokes.size} activeStroke=${view.activeStroke != null} delegate=${view.pageDelegate != null} editingEnabled=${view.isEditingEnabled()}"
+        )
         val delegate = view.pageDelegate
 
         for (stroke in view.strokes) {
@@ -35,88 +49,186 @@ class InkRenderer(private val view: InkCanvasView) {
             if (!stroke.path.isEmpty) {
                 strokePaint.color = stroke.color
                 strokePaint.strokeWidth = stroke.strokeWidth * view.currentZoom
-                strokePaint.alpha = if (stroke.tool == InkCanvasView.ToolType.HIGHLIGHTER) 100 else 255
+                strokePaint.alpha = if (stroke.tool == ToolType.HIGHLIGHTER) 100 else 255
                 strokePaint.style = Paint.Style.STROKE
                 canvas.drawPath(stroke.path, strokePaint)
             }
         }
 
-        if (delegate != null) {
-            for (shape in view.shapes) {
-                drawShape(canvas, shape, delegate)
-            }
+        for (shape in view.shapes) {
+            drawShapeScreenSpace(canvas, shape, delegate)
         }
 
         view.activeStroke?.let { stroke ->
-            delegate?.let { stroke.updatePath(it, force = true) }
+            stroke.updatePath(delegate, force = true)
             if (!stroke.path.isEmpty) {
                 strokePaint.style = Paint.Style.STROKE
                 strokePaint.color = stroke.color
                 strokePaint.strokeWidth = stroke.strokeWidth * view.currentZoom
-                strokePaint.alpha = if (stroke.tool == InkCanvasView.ToolType.HIGHLIGHTER) 100 else 255
+                strokePaint.alpha = if (stroke.tool == ToolType.HIGHLIGHTER) 100 else 255
                 canvas.drawPath(stroke.path, strokePaint)
             }
         }
 
         view.shapePreviewRect?.let { rect ->
-            strokePaint.style = Paint.Style.STROKE
-            strokePaint.color = view.currentPenColor
-            strokePaint.strokeWidth = view.currentPenWidth * view.currentZoom
-            strokePaint.alpha = 255
-            if (view.currentTool == InkCanvasView.ToolType.RECT) {
-                canvas.drawRect(rect, strokePaint)
-            } else if (view.currentTool == InkCanvasView.ToolType.ELLIPSE) {
-                canvas.drawOval(rect, strokePaint)
+            val shapeType =
+                when (view.currentTool) {
+                    ToolType.RECT -> ShapeType.RECTANGLE
+                    ToolType.ELLIPSE -> ShapeType.ELLIPSE
+                    else -> null
+                }
+            if (shapeType != null) {
+                drawShapeGeometry(
+                    canvas = canvas,
+                    rect = rect,
+                    shapeType = shapeType,
+                    fillColor = view.currentPenColor,
+                    fillAlpha = view.shapeFillAlpha,
+                    strokeColor = view.currentPenColor,
+                    strokeWidth = view.currentPenWidth
+                )
             }
         }
 
         view.marqueeRect?.let {
             selectionPaint.style = Paint.Style.STROKE
             canvas.drawRect(it, selectionPaint)
-            val fill = Paint().apply { 
-                color = Color.parseColor("#202196F3") 
-                style = Paint.Style.FILL 
-            }
-            canvas.drawRect(it, fill)
+            canvas.drawRect(it, selectionFillPaint)
         }
 
-        view.lassoPath?.let { canvas.drawPath(it, selectionPaint) }
+        view.lassoPath?.let { path ->
+            if (view.currentTool == ToolType.LASSO_FILL) {
+                canvas.drawPath(path, selectionFillPaint)
+            }
+            canvas.drawPath(path, selectionPaint)
+        }
 
         if (view.hasSelection()) {
             val bounds = view.getSelectionBounds()
-            bounds?.let {
-                selectionPaint.color = Color.parseColor("#FF2196F3")
-                canvas.drawRect(it, selectionPaint)
+            if (bounds != null) {
+                selectionPaint.style = Paint.Style.STROKE
+                selectionPaint.pathEffect = null // solid line for selection
+                canvas.drawRect(bounds, selectionPaint)
+                canvas.drawRect(bounds, selectionFillPaint)
+
+                // Restore dash for next draw if needed
+                selectionPaint.pathEffect = android.graphics.DashPathEffect(floatArrayOf(10f, 10f), 0f)
+
+                // Draw handles
+                val handleSize = 12f * view.currentZoom
+                selectionPaint.style = Paint.Style.FILL
+                canvas.drawCircle(bounds.left, bounds.top, handleSize, selectionPaint)
+                canvas.drawCircle(bounds.right, bounds.top, handleSize, selectionPaint)
+                canvas.drawCircle(bounds.left, bounds.bottom, handleSize, selectionPaint)
+                canvas.drawCircle(bounds.right, bounds.bottom, handleSize, selectionPaint)
             }
         }
     }
 
-    private fun drawShape(canvas: Canvas, shape: InkCanvasView.ShapeAnnotation, delegate: InkCanvasView.PageDelegate) {
+    private fun drawShape(canvas: Canvas, shape: ShapeAnnotation, delegate: PageDelegate) {
         val topLeft = delegate.projectPoint(shape.pageIndex, shape.normLeft, shape.normTop)
         val bottomRight = delegate.projectPoint(shape.pageIndex, shape.normRight, shape.normBottom)
         if (topLeft.x <= -999f || topLeft.y <= -999f || bottomRight.x <= -999f || bottomRight.y <= -999f) {
             return
         }
         val rect = RectF(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
+        drawShapeGeometry(
+            canvas = canvas,
+            rect = rect,
+            shapeType = shape.shapeType,
+            fillColor = shape.fillColor,
+            fillAlpha = shape.fillAlpha,
+            strokeColor = shape.strokeColor,
+            strokeWidth = shape.strokeWidth,
+            shape = shape
+        )
+    }
 
-        if (shape.fillAlpha > 0) {
-            fillPaint.color = shape.fillColor
-            fillPaint.alpha = shape.fillAlpha
+    private fun drawShapeScreenSpace(
+        canvas: Canvas,
+        shape: ShapeAnnotation,
+        delegate: PageDelegate?
+    ) {
+        val rect =
+            if (delegate != null) {
+                val topLeft = delegate.projectPoint(shape.pageIndex, shape.normLeft, shape.normTop)
+                val bottomRight = delegate.projectPoint(shape.pageIndex, shape.normRight, shape.normBottom)
+                if (topLeft.x <= -999f || topLeft.y <= -999f || bottomRight.x <= -999f || bottomRight.y <= -999f) {
+                    RectF(shape.normLeft, shape.normTop, shape.normRight, shape.normBottom)
+                } else {
+                    RectF(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
+                }
+            } else {
+                RectF(shape.normLeft, shape.normTop, shape.normRight, shape.normBottom)
+            }
+
+        if (rect.isEmpty || rect.width() < 1f || rect.height() < 1f) return
+
+        drawShapeGeometry(
+            canvas = canvas,
+            rect = rect,
+            shapeType = shape.shapeType,
+            fillColor = shape.fillColor,
+            fillAlpha = shape.fillAlpha,
+            strokeColor = shape.strokeColor,
+            strokeWidth = shape.strokeWidth,
+            shape = shape
+        )
+    }
+
+    private fun drawShapeGeometry(
+        canvas: Canvas,
+        rect: RectF,
+        shapeType: ShapeType,
+        fillColor: Int,
+        fillAlpha: Int,
+        strokeColor: Int,
+        strokeWidth: Float,
+        shape: ShapeAnnotation? = null
+    ) {
+        if (fillAlpha > 0) {
+            fillPaint.color = fillColor
+            fillPaint.alpha = fillAlpha.coerceIn(0, 255)
             fillPaint.style = Paint.Style.FILL
-            if (shape.shapeType == InkCanvasView.ShapeType.RECTANGLE) {
-                canvas.drawRect(rect, fillPaint)
-            } else if (shape.shapeType == InkCanvasView.ShapeType.ELLIPSE) {
-                canvas.drawOval(rect, fillPaint)
+            drawShapePrimitive(canvas, rect, shapeType, fillPaint, shape)
+        }
+
+        strokePaint.color = strokeColor
+        strokePaint.strokeWidth = resolveShapeBorderWidth(strokeWidth)
+        strokePaint.alpha = resolveShapeBorderAlpha(fillAlpha)
+        strokePaint.style = Paint.Style.STROKE
+        
+        drawShapePrimitive(canvas, rect, shapeType, strokePaint, shape)
+    }
+
+    private fun drawShapePrimitive(
+        canvas: Canvas,
+        rect: RectF,
+        shapeType: ShapeType,
+        paint: Paint,
+        shape: ShapeAnnotation? = null
+    ) {
+        when (shapeType) {
+            ShapeType.RECTANGLE -> canvas.drawRect(rect, paint)
+            ShapeType.ELLIPSE -> canvas.drawOval(rect, paint)
+            ShapeType.FREEFORM -> {
+                if (shape != null) {
+                    shape.updatePath(view.pageDelegate)
+                    if (!shape.path.isEmpty) {
+                        canvas.drawPath(shape.path, paint)
+                    }
+                }
             }
         }
+    }
 
-        strokePaint.color = shape.strokeColor
-        strokePaint.strokeWidth = shape.strokeWidth * view.currentZoom
-        strokePaint.style = Paint.Style.STROKE
-        if (shape.shapeType == InkCanvasView.ShapeType.RECTANGLE) {
-            canvas.drawRect(rect, strokePaint)
-        } else if (shape.shapeType == InkCanvasView.ShapeType.ELLIPSE) {
-            canvas.drawOval(rect, strokePaint)
-        }
+    private fun resolveShapeBorderWidth(strokeWidth: Float): Float {
+        val logicalWidth = (strokeWidth * view.currentZoom).coerceAtLeast(1f)
+        return (logicalWidth * 0.25f).coerceIn(0.5f, 4f)
+    }
+
+    private fun resolveShapeBorderAlpha(fillAlpha: Int): Int {
+        val clampedFillAlpha = fillAlpha.coerceIn(0, 255)
+        return if (clampedFillAlpha == 0) 180 else (clampedFillAlpha * 0.8f).toInt().coerceAtLeast(36)
     }
 }

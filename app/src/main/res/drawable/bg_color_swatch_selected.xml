@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <stroke android:width="2dp" android:color="@android:color/white" />
-    <solid android:color="#FFFFFFFF" /> <!-- Solid white background, color overridden programmatically -->
+    <stroke android:width="3dp" android:color="#FFFFFF" /> <!-- Thick white border for selection -->
+    <solid android:color="#FFFFFFFF" /> <!-- Background color overridden programmatically -->
+    <padding android:bottom="2dp" android:left="2dp" android:right="2dp" android:top="2dp" />
 </shape>

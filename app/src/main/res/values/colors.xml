@@ -16,14 +16,11 @@
     <color name="color_error">#F44336</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="ann_black">#212121</color>
-    <color name="ann_red">#EF5350</color>
-    <color name="ann_blue">#1E88E5</color>
-    <color name="ann_green">#66BB6A</color>
-    <color name="ann_yellow">#FFEE58</color>
-    <color name="ann_cyan">#26C6DA</color>
+    <color name="ann_black">#000000</color>
     <color name="ann_white">#FFFFFF</color>
-    <color name="ann_orange">#FF9800</color>
+    <color name="ann_dark_cyan">#008B8B</color>
+    <color name="ann_olive_dark">#556B2F</color>
+    <color name="ann_amber">#FFBF00</color>
 
     <!-- Brand Palette: Dark Glassmorphism -->
     <color name="colorBackgroundDark">#0B111A</color>

@@ -24,6 +24,50 @@
         app:layout_constraintEnd_toEndOf="@id/pdf_viewer_container" />
 
     <LinearLayout
+        android:id="@+id/selection_action_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_page_indicator_chip"
+        android:clickable="true"
+        android:elevation="24dp"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btn_selection_duplicate"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:text="Duplicate"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_selection_delete_floating"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:text="Delete"
+            android:textAllCaps="false"
+            android:textColor="#FFFF7070" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/annotation_toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,11 +148,11 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-                        <ImageButton android:id="@+id/btn_color_black" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/black" />
-                        <ImageButton android:id="@+id/btn_color_red" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/holo_red_light" />
-                        <ImageButton android:id="@+id/btn_color_blue" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/holo_blue_light" />
-                        <ImageButton android:id="@+id/btn_color_green" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/holo_green_light" />
-                        <ImageButton android:id="@+id/btn_color_white" style="@style/AnnotationColorSwatch" android:backgroundTint="@android:color/white" />
+                        <ImageButton android:id="@+id/btn_color_black" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_black" />
+                        <ImageButton android:id="@+id/btn_color_white" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_white" />
+                        <ImageButton android:id="@+id/btn_color_dark_cyan" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_dark_cyan" />
+                        <ImageButton android:id="@+id/btn_color_olive_dark" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_olive_dark" />
+                        <ImageButton android:id="@+id/btn_color_amber" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_amber" />
                         <ImageButton android:id="@+id/btn_color_custom" style="@style/AnnotationColorSwatch" android:src="@android:drawable/ic_menu_gallery" app:tint="@color/white" />
                     </LinearLayout>
                 </HorizontalScrollView>

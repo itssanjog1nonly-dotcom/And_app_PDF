@@ -16,145 +16,6 @@ class InkCanvasView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    enum class ToolType {
-        PEN, HIGHLIGHTER, ERASER, RECT, ELLIPSE, SELECT_TAP, SELECT_BOX, LASSO, LASSO_FILL
-    }
-
-    enum class EraserMode { AREA, STROKE }
-
-    enum class DragMode { NONE, MARQUEE, MOVE, RESIZE, LASSO }
-
-    enum class ShapeType { RECTANGLE, ELLIPSE, FREEFORM }
-
-    data class Stroke(
-        val id: String = java.util.UUID.randomUUID().toString(),
-        val pageIndex: Int,
-        val points: MutableList<PointF>,
-        val color: Int,
-        val strokeWidth: Float,
-        val tool: ToolType,
-        val eraserMode: EraserMode = EraserMode.AREA
-    ) {
-        @Transient private var _path: Path? = null
-        val path: Path get() { if (_path == null) _path = Path(); return _path!! }
-        @Transient private var lastProjectedBounds: RectF? = null
-        @Transient var cachedScreenBounds: RectF = RectF()
-
-        fun updatePath(delegate: PageDelegate?, force: Boolean = false) {
-            android.util.Log.d("INK_DEBUG", "updatePath: delegate=${delegate != null} points=${points.size} force=$force")
-            if (delegate != null) {
-                // Full projection mode: use page coordinates
-                val currentBounds = delegate.getPageBounds(pageIndex)
-                if (!force && lastProjectedBounds != null && currentBounds != null &&
-                    kotlin.math.abs(currentBounds.left - lastProjectedBounds!!.left) < 0.01f &&
-                    kotlin.math.abs(currentBounds.top - lastProjectedBounds!!.top) < 0.01f &&
-                    kotlin.math.abs(currentBounds.width() - lastProjectedBounds!!.width()) < 0.01f &&
-                    kotlin.math.abs(currentBounds.height() - lastProjectedBounds!!.height()) < 0.01f &&
-                    !path.isEmpty) return
-                if (currentBounds != null) lastProjectedBounds = RectF(currentBounds)
-                path.reset()
-                if (points.isEmpty()) { cachedScreenBounds.setEmpty(); return }
-                val first = delegate.projectPoint(pageIndex, points[0].x, points[0].y)
-                // If projection returns invalid coords, fall through to screen mode
-                if (first.x > -999f && first.y > -999f) {
-                    path.moveTo(first.x, first.y)
-                    for (i in 1 until points.size) {
-                        val p = delegate.projectPoint(pageIndex, points[i].x, points[i].y)
-                        path.lineTo(p.x, p.y)
-                    }
-                    path.computeBounds(cachedScreenBounds, true)
-                    return
-                }
-            }
-            // Screen coordinate fallback: points are already in screen space
-            path.reset()
-            if (points.isEmpty()) { cachedScreenBounds.setEmpty(); return }
-            path.moveTo(points[0].x, points[0].y)
-            for (i in 1 until points.size) {
-                path.lineTo(points[i].x, points[i].y)
-            }
-            path.computeBounds(cachedScreenBounds, true)
-            android.util.Log.d("INK_DEBUG", "updatePath fallback: bounds=$cachedScreenBounds")
-        }
-
-        fun intersects(x: Float, y: Float, tolerance: Float, delegate: PageDelegate?): Boolean {
-            if (delegate == null) return false
-            updatePath(delegate)
-            val bounds = RectF()
-            path.computeBounds(bounds, true)
-            if (!bounds.intersects(x - tolerance, y - tolerance, x + tolerance, y + tolerance)) return false
-            for (pointNorm in points) {
-                val point = delegate.projectPoint(pageIndex, pointNorm.x, pointNorm.y)
-                val dx = point.x - x
-                val dy = point.y - y
-                if (dx * dx + dy * dy <= tolerance * tolerance) return true
-            }
-            return false
-        }
-    }
-
-    data class ShapeAnnotation(
-        val id: String = java.util.UUID.randomUUID().toString(),
-        val pageIndex: Int,
-        val shapeType: ShapeType,
-        val normLeft: Float,
-        val normTop: Float,
-        val normRight: Float,
-        val normBottom: Float,
-        val strokeColor: Int,
-        val strokeWidth: Float,
-        val fillColor: Int,
-        val fillAlpha: Int,
-        val points: List<PointF>? = null
-    ) {
-        fun intersects(x: Float, y: Float, tolerance: Float, delegate: PageDelegate): Boolean {
-            if (shapeType == ShapeType.FREEFORM && points != null && points.isNotEmpty()) {
-                val path = Path()
-                val start = delegate.projectPoint(pageIndex, points[0].x, points[0].y)
-                path.moveTo(start.x, start.y)
-                for (i in 1 until points.size) {
-                    val p = delegate.projectPoint(pageIndex, points[i].x, points[i].y)
-                    path.lineTo(p.x, p.y)
-                }
-                path.close()
-                val bounds = RectF()
-                path.computeBounds(bounds, true)
-                val region = android.graphics.Region()
-                region.setPath(path, android.graphics.Region(bounds.left.toInt(), bounds.top.toInt(), bounds.right.toInt(), bounds.bottom.toInt()))
-                return region.contains(x.toInt(), y.toInt())
-            }
-            val topLeft = delegate.projectPoint(pageIndex, normLeft, normTop)
-            val bottomRight = delegate.projectPoint(pageIndex, normRight, normBottom)
-            if (topLeft.x < -10000f || topLeft.y < -10000f || bottomRight.x < -10000f || bottomRight.y < -10000f) return false
-            val screenRect = RectF(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
-            return if (shapeType == ShapeType.RECTANGLE) {
-                val checkRect = RectF(screenRect.left - tolerance, screenRect.top - tolerance, screenRect.right + tolerance, screenRect.bottom + tolerance)
-                checkRect.contains(x, y)
-            } else {
-                val cx = screenRect.centerX()
-                val cy = screenRect.centerY()
-                val rx = screenRect.width() / 2 + tolerance
-                val ry = screenRect.height() / 2 + tolerance
-                if (rx < 0.0001f || ry < 0.0001f) return false
-                val dx = x - cx
-                val dy = y - cy
-                (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1.0f
-            }
-        }
-    }
-
-    interface OnChangeListener {
-        fun onChange()
-    }
-
-    interface PageDelegate {
-        fun getVisiblePageIndices(): List<Int>
-        fun getPageBounds(pageIndex: Int): RectF?
-        fun getPageIndexAtPoint(x: Float, y: Float): Int
-        fun normalizePoint(pageIndex: Int, x: Float, y: Float): PointF
-        fun projectPoint(pageIndex: Int, normX: Float, normY: Float): PointF
-    }
-
     var pageDelegate: PageDelegate? = null
         private set
     var isDebugEnabled = false
@@ -166,10 +27,12 @@ class InkCanvasView @JvmOverloads constructor(
     var shapeFillAlpha: Int = 128
     var onChangeListener: OnChangeListener? = null
     var onSelectionChangedListener: ((Boolean) -> Unit)? = null
+    var onDrawingStateChangedListener: ((Boolean) -> Unit)? = null
+    var onHistoryChangedListener: ((Boolean, Boolean) -> Unit)? = null
     var currentPenColor: Int = Color.BLACK
-    var currentPenWidth: Float = 4f
-    var currentHighlighterColor: Int = Color.parseColor("#80FF0000")
-    var currentHighlighterWidth: Float = 20f
+    var currentPenWidth: Float = 8f
+    var currentHighlighterColor: Int = Color.parseColor("#FFFF8800")
+    var currentHighlighterWidth: Float = 24f
     var currentZoom: Float = 1f
     private var currentEraserMode: EraserMode = EraserMode.AREA
     private val noDrawRegions = mutableListOf<android.graphics.Rect>()
@@ -184,13 +47,53 @@ class InkCanvasView @JvmOverloads constructor(
     internal var lassoPath: Path? = null
     internal var activeStroke: Stroke? = null
 
-    private val undoStack = java.util.LinkedList<Pair<List<Stroke>, List<ShapeAnnotation>>>()
-    private val redoStack = java.util.LinkedList<Pair<List<Stroke>, List<ShapeAnnotation>>>()
-    private val MAX_HISTORY = 50
+    private val historyManager = InkHistoryManager(50) { canUndo, canRedo ->
+        onHistoryChangedListener?.invoke(canUndo, canRedo)
+    }
 
     private val touchHandler = InkTouchHandler(this)
     private val renderer = InkRenderer(this)
     private val selectionHandler = InkSelectionHandler(this)
+    internal val selectionTransform = InkSelectionTransform(this)
+
+    fun addFreeformShapeFromLasso(lassoPoints: List<PointF>, pageIndex: Int) {
+        if (lassoPoints.size < 3) return
+        pushUndo()
+        val delegate = pageDelegate
+        
+        val normalizedPoints = lassoPoints.map { pt ->
+            delegate?.normalizePoint(pageIndex, pt.x, pt.y) ?: pt
+        }
+
+        var left = Float.MAX_VALUE
+        var top = Float.MAX_VALUE
+        var right = Float.MIN_VALUE
+        var bottom = Float.MIN_VALUE
+        for (pt in normalizedPoints) {
+            left = minOf(left, pt.x)
+            top = minOf(top, pt.y)
+            right = maxOf(right, pt.x)
+            bottom = maxOf(bottom, pt.y)
+        }
+
+        val shape = ShapeAnnotation(
+            id = java.util.UUID.randomUUID().toString(),
+            pageIndex = pageIndex,
+            shapeType = ShapeType.FREEFORM,
+            normLeft = left,
+            normTop = top,
+            normRight = right,
+            normBottom = bottom,
+            strokeColor = currentPenColor,
+            strokeWidth = currentPenWidth / currentZoom,
+            fillColor = currentPenColor,
+            fillAlpha = shapeFillAlpha,
+            points = normalizedPoints
+        )
+        shapes.add(shape)
+        onChangeListener?.onChange()
+        invalidate()
+    }
 
     fun setNoDrawRegions(regions: List<android.graphics.Rect>) {
         noDrawRegions.clear()
@@ -198,7 +101,12 @@ class InkCanvasView @JvmOverloads constructor(
         invalidate()
     }
     fun setPageDelegate(delegate: PageDelegate) { pageDelegate = delegate }
-    fun setZoom(zoom: Float) { currentZoom = zoom }
+    fun setZoom(zoom: Float) {
+        currentZoom = zoom
+        strokes.forEach { it.invalidateCache() }
+        shapes.forEach { it.invalidateCache() }
+        invalidate()
+    }
     fun cancelCurrentGesture() {
         activeStroke = null
         shapePreviewRect = null
@@ -222,34 +130,49 @@ class InkCanvasView @JvmOverloads constructor(
     fun getStrokes(): List<Stroke> = strokes.toList()
     fun getShapes(): List<ShapeAnnotation> = shapes.toList()
 
-    fun setPenColor(color: Int) { currentPenColor = color }
-    fun setHighlighterColor(color: Int) { currentHighlighterColor = color }
-    fun setPenWidth(width: Float) { currentPenWidth = width }
-    fun setHighlighterWidth(width: Float) { currentHighlighterWidth = width }
-    fun setTool(tool: ToolType) { currentTool = tool }
+    fun setPenColor(color: Int) {
+        currentPenColor = color
+        invalidate()
+    }
+    fun setHighlighterColor(color: Int) {
+        currentHighlighterColor = color
+        if (currentTool == ToolType.LASSO_FILL) {
+            currentPenColor = color
+        }
+        invalidate()
+    }
+    fun setPenWidth(width: Float) {
+        currentPenWidth = width
+        invalidate()
+    }
+    fun setHighlighterWidth(width: Float) {
+        currentHighlighterWidth = width
+        invalidate()
+    }
+    fun setTool(tool: ToolType) {
+        currentTool = tool
+        invalidate()
+    }
     fun setEraserMode(mode: EraserMode) { currentEraserMode = mode }
     fun getEraserMode(): EraserMode = currentEraserMode
 
     fun hasSelection(): Boolean = selectedStrokeIds.isNotEmpty() || selectedShapeIds.isNotEmpty()
 
     fun deleteSelected() { selectionHandler.deleteSelected() }
+    fun duplicateSelected() { selectionHandler.duplicateSelected() }
     fun undo() {
-        if (undoStack.isEmpty()) return
         val current = snapshot()
-        redoStack.add(current)
-        if (redoStack.size > MAX_HISTORY) redoStack.removeFirst()
-        
-        val snapshot = undoStack.removeLast()
-        restoreSnapshot(snapshot)
+        historyManager.undo(current)?.let {
+            restoreSnapshot(it)
+            onChangeListener?.onChange()
+        }
     }
     fun redo() {
-        if (redoStack.isEmpty()) return
         val current = snapshot()
-        undoStack.add(current)
-        if (undoStack.size > MAX_HISTORY) undoStack.removeFirst()
-        
-        val snapshot = redoStack.removeLast()
-        restoreSnapshot(snapshot)
+        historyManager.redo(current)?.let {
+            restoreSnapshot(it)
+            onChangeListener?.onChange()
+        }
     }
     fun clearAll() {
         if (strokes.isNotEmpty() || shapes.isNotEmpty()) {
@@ -258,7 +181,6 @@ class InkCanvasView @JvmOverloads constructor(
             shapes.clear()
             selectedStrokeIds.clear()
             selectedShapeIds.clear()
-            redoStack.clear()
             onChangeListener?.onChange()
             onSelectionChangedListener?.invoke(false)
             invalidate()
@@ -266,6 +188,16 @@ class InkCanvasView @JvmOverloads constructor(
     }
     fun captureInitialSelectionState() { selectionHandler.captureInitialState() }
     fun commitSelectionStateChange() { selectionHandler.commitStateChange() }
+
+    fun translateSelection(previousX: Float, previousY: Float, currentX: Float, currentY: Float) {
+        selectionTransform.translateSelection(previousX, previousY, currentX, currentY)
+        onSelectionChangedListener?.invoke(hasSelection())
+    }
+
+    fun resizeSelection(anchor: PointF, previousX: Float, previousY: Float, currentX: Float, currentY: Float) {
+        selectionTransform.resizeSelection(anchor, previousX, previousY, currentX, currentY)
+        onSelectionChangedListener?.invoke(hasSelection())
+    }
     fun liveUpdateSelectedProperties(color: Int? = null, width: Float? = null, alpha: Int? = null) {
         selectionHandler.liveUpdateProperties(color, width, alpha)
     }
@@ -275,35 +207,28 @@ class InkCanvasView @JvmOverloads constructor(
     }
 
     internal fun pushUndo() {
-        val snapshot = snapshot()
-        undoStack.add(snapshot)
-        if (undoStack.size > MAX_HISTORY) undoStack.removeFirst()
-        redoStack.clear()
+        historyManager.pushUndo(snapshot())
     }
 
     internal fun pushUndoSnapshot(snapshot: Pair<List<Stroke>, List<ShapeAnnotation>>) {
-        undoStack.add(snapshot)
-        if (undoStack.size > MAX_HISTORY) undoStack.removeFirst()
-        redoStack.clear()
+        historyManager.pushUndo(snapshot)
+    }
+
+    private fun notifyHistoryChanged() {
+        historyManager.notifyChanged()
     }
 
     internal fun addActiveStroke(stroke: Stroke) { activeStroke = stroke }
     fun addStroke(stroke: Stroke) {
         pushUndo()
         strokes.add(stroke)
-        selectedStrokeIds.clear()
-        selectedShapeIds.clear()
         onChangeListener?.onChange()
-        onSelectionChangedListener?.invoke(false)
         invalidate()
     }
     fun addShape(shape: ShapeAnnotation) {
         pushUndo()
         shapes.add(shape)
-        selectedStrokeIds.clear()
-        selectedShapeIds.clear()
         onChangeListener?.onChange()
-        onSelectionChangedListener?.invoke(false)
         invalidate()
     }
 
@@ -313,11 +238,29 @@ class InkCanvasView @JvmOverloads constructor(
     internal fun finalizeMarqueeSelection() {
         selectionHandler.finalizeMarqueeSelection()
     }
-    internal fun finalizeLassoSelection() {
-        selectionHandler.finalizeLassoSelection()
+    internal fun finalizeLassoSelection(points: List<PointF>, pageIndex: Int) {
+        selectionHandler.finalizeLassoSelection(points, pageIndex)
     }
 
     fun getSelectionBounds(): RectF? = selectionHandler.getSelectionBounds()
+
+    fun getSelectionHandle(x: Float, y: Float, padding: Float = 32f): HandleType {
+        val bounds = getSelectionBounds() ?: return HandleType.NONE
+        val zoomPadding = padding 
+        
+        if (isNear(x, y, bounds.right, bounds.bottom, zoomPadding)) return HandleType.RESIZE_BR
+        if (isNear(x, y, bounds.left, bounds.bottom, zoomPadding)) return HandleType.RESIZE_BL
+        if (isNear(x, y, bounds.right, bounds.top, zoomPadding)) return HandleType.RESIZE_TR
+        if (isNear(x, y, bounds.left, bounds.top, zoomPadding)) return HandleType.RESIZE_TL
+        
+        return HandleType.NONE
+    }
+
+    private fun isNear(x1: Float, y1: Float, x2: Float, y2: Float, tolerance: Float): Boolean {
+        return Math.abs(x1 - x2) <= tolerance && Math.abs(y1 - y2) <= tolerance
+    }
+
+    enum class HandleType { NONE, RESIZE_TL, RESIZE_TR, RESIZE_BL, RESIZE_BR }
 
     internal fun eraseAtPoint(x: Float, y: Float) {
         val tolerance = (24f / currentZoom).coerceAtLeast(12f)
@@ -363,20 +306,18 @@ class InkCanvasView @JvmOverloads constructor(
         invalidate()
     }
 
-    private fun snapshot(): Pair<List<Stroke>, List<ShapeAnnotation>> {
-        val strokeSnapshot =
-            strokes.map { stroke ->
-                stroke.copy(points = stroke.points.map { PointF(it.x, it.y) }.toMutableList())
-            }
-        val shapeSnapshot = shapes.map { it.copy(points = it.points?.map { point -> PointF(point.x, point.y) }) }
-        return Pair(strokeSnapshot, shapeSnapshot)
+    fun snapshot(): Pair<List<Stroke>, List<ShapeAnnotation>> {
+        return Pair(
+            strokes.map { it.deepCopy() },
+            shapes.map { it.deepCopy() }
+        )
     }
 
-    private fun restoreSnapshot(snapshot: Pair<List<Stroke>, List<ShapeAnnotation>>) {
+    fun restoreSnapshot(snapshot: Pair<List<Stroke>, List<ShapeAnnotation>>) {
         strokes.clear()
-        strokes.addAll(snapshot.first.map { stroke -> stroke.copy(points = stroke.points.map { PointF(it.x, it.y) }.toMutableList()) })
+        strokes.addAll(snapshot.first.map { it.deepCopy() })
         shapes.clear()
-        shapes.addAll(snapshot.second.map { shape -> shape.copy(points = shape.points?.map { point -> PointF(point.x, point.y) }) })
+        shapes.addAll(snapshot.second.map { it.deepCopy() })
         selectedStrokeIds.clear()
         selectedShapeIds.clear()
         onSelectionChangedListener?.invoke(false)
@@ -390,20 +331,48 @@ class InkCanvasView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        android.util.Log.d("INK_DEBUG", "onTouchEvent: action=${event.actionMasked} toolType=${event.getToolType(0)} editingEnabled=$_editingEnabled currentTool=$currentTool")
         if (!_editingEnabled) return false
-        val x = event.x
-        val y = event.y
+
+        // Check all pointers for stylus input to support palm rejection
+        var stylusPointerIndex = -1
+        for (i in 0 until event.pointerCount) {
+            val toolType = event.getToolType(i)
+            if (toolType == MotionEvent.TOOL_TYPE_STYLUS || toolType == MotionEvent.TOOL_TYPE_ERASER) {
+                stylusPointerIndex = i
+                break
+            }
+        }
+
+        // If no stylus is found, but we are in an editing mode that allows touch (like marquee/lasso selection),
+        // we might want to allow finger input. However, the current logic seems to prefer stylus for drawing.
+        // For now, let's stick to stylus-only if a stylus is available, or finger if no stylus is detected.
+        // Actually, the requirement said: "If a user rests their palm (pointer 0) before touching the stylus (pointer 1), 
+        // the stylus input is ignored. It must iterate through all pointers."
+        
+        if (stylusPointerIndex == -1) {
+            return false
+        }
+
+        val x = event.getX(stylusPointerIndex)
+        val y = event.getY(stylusPointerIndex)
+        
         if (isPointBlocked(x, y)) return false
 
-        val toolType = event.getToolType(0)
-        val isStylus = toolType == MotionEvent.TOOL_TYPE_STYLUS || toolType == MotionEvent.TOOL_TYPE_ERASER
-        if (!isStylus) return false
-
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> touchHandler.handleDown(x, y)
-            MotionEvent.ACTION_MOVE -> touchHandler.handleMove(x, y)
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> touchHandler.handleUp(x, y)
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
+                // Only handle if it's the stylus pointer that went down
+                if (event.actionIndex == stylusPointerIndex) {
+                    touchHandler.handleDown(x, y)
+                }
+            }
+            MotionEvent.ACTION_MOVE -> {
+                touchHandler.handleMove(x, y)
+            }
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_CANCEL -> {
+                if (event.actionIndex == stylusPointerIndex || event.actionMasked == MotionEvent.ACTION_UP || event.actionMasked == MotionEvent.ACTION_CANCEL) {
+                    touchHandler.handleUp(x, y)
+                }
+            }
         }
         invalidate()
         return true

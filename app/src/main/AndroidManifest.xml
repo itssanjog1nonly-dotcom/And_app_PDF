@@ -33,5 +33,10 @@
       android:theme="@style/Theme.PdfScrollReader">
     </activity>
 
+    <service
+      android:name="androidx.pdf.service.PdfDocumentServiceImpl"
+      android:exported="false"
+      android:process=":androidx.pdf.service.PdfDocumentServiceImpl" />
+
   </application>
 </manifest>

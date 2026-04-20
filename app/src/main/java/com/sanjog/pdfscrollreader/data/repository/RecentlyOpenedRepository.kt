@@ -15,8 +15,8 @@ class RecentlyOpenedRepository(private val context: Context) {
     fun getAll(): List<RecentlyOpenedEntry> {
         val json = prefs.getString(key, null) ?: return emptyList()
         val type = object : TypeToken<List<RecentlyOpenedEntry>>() {}.type
-        return gson.fromJson<List<RecentlyOpenedEntry>>(json, type)
-            .sortedByDescending { it.lastOpened }
+        val entries = gson.fromJson<List<RecentlyOpenedEntry>>(json, type) ?: return emptyList()
+        return entries.sortedByDescending { it.lastOpened }
     }
 
     fun recordOpen(uri: Uri) {
@@ -54,6 +54,25 @@ class RecentlyOpenedRepository(private val context: Context) {
         }
         
         save(current.take(20))
+    }
+
+    fun recordVisit(uri: Uri, scrollPosition: Int) {
+        val current = getAll().toMutableList()
+        val uriString = uri.toString()
+        val index = current.indexOfFirst { it.uri == uriString }
+        val now = System.currentTimeMillis()
+        if (index != -1) {
+            val entry = current.removeAt(index)
+            current.add(0, entry.copy(lastOpened = now, scrollPosition = scrollPosition))
+        } else {
+            val displayName = uri.toDisplayName(context)
+            current.add(0, RecentlyOpenedEntry(uriString, displayName, now, scrollPosition = scrollPosition))
+        }
+        save(current.take(20))
+    }
+
+    fun getLastPosition(uri: Uri): Int {
+        return getAll().find { it.uri == uri.toString() }?.scrollPosition ?: 0
     }
 
     fun clear() {
