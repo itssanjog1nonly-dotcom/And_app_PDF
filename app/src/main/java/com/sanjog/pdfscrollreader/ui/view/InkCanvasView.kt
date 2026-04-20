@@ -329,26 +329,43 @@ class InkCanvasView @JvmOverloads constructor(
         return noDrawRegions.any { it.contains(x.toInt(), y.toInt()) }
     }
 
+    private var previousTool: ToolType? = null
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!_editingEnabled) return false
 
+        // Check for stylus button (primary button) for eraser shortcut
+        val isStylusButtonPressed = event.buttonState and MotionEvent.BUTTON_STYLUS_PRIMARY != 0
+
+        if (isStylusButtonPressed) {
+            if (currentTool != ToolType.ERASER) {
+                previousTool = currentTool
+                currentTool = ToolType.ERASER
+                invalidate()
+            }
+        } else {
+            previousTool?.let {
+                currentTool = it
+                previousTool = null
+                invalidate()
+            }
+        }
+
         // Check all pointers for stylus input to support palm rejection
         var stylusPointerIndex = -1
+        var fingerPointerCount = 0
         for (i in 0 until event.pointerCount) {
             val toolType = event.getToolType(i)
             if (toolType == MotionEvent.TOOL_TYPE_STYLUS || toolType == MotionEvent.TOOL_TYPE_ERASER) {
                 stylusPointerIndex = i
-                break
+            } else if (toolType == MotionEvent.TOOL_TYPE_FINGER) {
+                fingerPointerCount++
             }
         }
 
-        // If no stylus is found, but we are in an editing mode that allows touch (like marquee/lasso selection),
-        // we might want to allow finger input. However, the current logic seems to prefer stylus for drawing.
-        // For now, let's stick to stylus-only if a stylus is available, or finger if no stylus is detected.
-        // Actually, the requirement said: "If a user rests their palm (pointer 0) before touching the stylus (pointer 1), 
-        // the stylus input is ignored. It must iterate through all pointers."
-        
+        // Only stylus should be handled here for drawing. 
+        // Fingers are handled by the underlying PDF viewer for scrolling.
         if (stylusPointerIndex == -1) {
             return false
         }

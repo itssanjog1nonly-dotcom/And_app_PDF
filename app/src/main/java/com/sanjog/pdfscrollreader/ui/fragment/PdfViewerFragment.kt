@@ -18,6 +18,7 @@ import androidx.core.os.BundleCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.pdf.view.PdfView
+import androidx.recyclerview.widget.RecyclerView
 import com.sanjog.pdfscrollreader.R
 import com.sanjog.pdfscrollreader.databinding.FragmentPdfViewerBinding
 import com.sanjog.pdfscrollreader.data.repository.RecentlyOpenedRepository
@@ -46,14 +47,15 @@ class PdfViewerFragment : Fragment() {
     private lateinit var exportManager: PdfExportManager
     private lateinit var toolbarHelper: PdfViewerToolbarHelper
 
+
     private data class ToolSettings(var color: Int, var width: Float)
 
     private val toolSettings = mutableMapOf(
-        ToolType.PEN to ToolSettings(Color.BLACK, 8f),
+        ToolType.PEN to ToolSettings(Color.parseColor("#008B8B"), 8f),
         ToolType.HIGHLIGHTER to ToolSettings(Color.parseColor("#FFFF8800"), 24f),
-        ToolType.RECT to ToolSettings(Color.BLACK, 8f),
-        ToolType.ELLIPSE to ToolSettings(Color.BLACK, 8f),
-        ToolType.LASSO_FILL to ToolSettings(Color.BLACK, 8f)
+        ToolType.RECT to ToolSettings(Color.parseColor("#008B8B"), 8f),
+        ToolType.ELLIPSE to ToolSettings(Color.parseColor("#008B8B"), 8f),
+        ToolType.LASSO_FILL to ToolSettings(Color.parseColor("#008B8B"), 8f)
     )
 
     private var lastCustomColor: Int = Color.GRAY
@@ -81,7 +83,7 @@ class PdfViewerFragment : Fragment() {
             pdfUri = BundleCompat.getParcelable(it, ARG_URI, Uri::class.java)
         }
         annotationSync = AnnotationSyncManager(requireContext())
-        exportManager = PdfExportManager(this, annotationSync, { binding.inkCanvasView }, { androidXPdfFragment })
+        exportManager = PdfExportManager(this) { binding.inkCanvasView }
     }
 
     private val exportPdfLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.CreateDocument("application/pdf")) { uri ->
@@ -94,7 +96,7 @@ class PdfViewerFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentPdfViewerBinding.inflate(inflater, container, false)
-        autoScrollManager = AutoScrollManager(requireContext(), binding, pdfUri?.toString(), null) { isPlaying ->
+        autoScrollManager = AutoScrollManager(requireContext(), binding, pdfUri?.toString(), this) { isPlaying ->
             updateFabIcon(isPlaying)
         }
         toolbarHelper = PdfViewerToolbarHelper(binding, 
@@ -124,8 +126,8 @@ class PdfViewerFragment : Fragment() {
 
         val fragment = AppEditablePdfViewerFragment.newInstance(uri).apply {
             listener = object : AppEditablePdfViewerFragment.Listener {
-                override fun onApplyEditsSuccess(handle: androidx.pdf.PdfWriteHandle) = exportManager.handleApplyEditsSuccess(handle)
-                override fun onApplyEditsFailed(throwable: Throwable) = exportManager.handleApplyEditsFailed(throwable)
+                override fun onApplyEditsSuccess(handle: androidx.pdf.PdfWriteHandle) {}
+                override fun onApplyEditsFailed(throwable: Throwable) {}
                 override fun onDocumentLoaded() { restoreLastPosition() }
                 override fun onPdfViewCreated(pdfView: PdfView) { setupPdfView(pdfView, this@apply) }
             }
@@ -149,22 +151,31 @@ class PdfViewerFragment : Fragment() {
     private fun setupPdfView(pdfView: PdfView, fragment: AppEditablePdfViewerFragment) {
         androidXPdfFragment = fragment
         pdfScrollableView = pdfView 
-        autoScrollManager.setFragment(fragment)
         
-        viewportChangedListener = PdfView.OnViewportChangedListener { _: Int, _: Int, pageLocations: SparseArray<RectF>, zoomLevel: Float ->
-            currentZoom = zoomLevel
-            currentPageLocations.clear()
-            for (i in 0 until pageLocations.size()) {
-                currentPageLocations.put(pageLocations.keyAt(i), pageLocations.valueAt(i))
+        autoScrollManager.setPdfView(pdfView)
+        autoScrollManager.setPdfViewerFragment(this)
+        
+        viewportChangedListener = object : PdfView.OnViewportChangedListener {
+            override fun onViewportChanged(firstVisiblePage: Int, visiblePagesCount: Int, pageLocations: SparseArray<RectF>, zoomLevel: Float) {
+                currentZoom = zoomLevel
+                currentPageLocations.clear()
+                for (i in 0 until pageLocations.size()) {
+                    currentPageLocations.put(pageLocations.keyAt(i), pageLocations.valueAt(i))
+                }
+                binding.inkCanvasView.setZoom(currentZoom)
+                updateNoDrawRegions()
             }
-            binding.inkCanvasView.setZoom(currentZoom)
-            updateNoDrawRegions()
         }
         pdfView.addOnViewportChangedListener(viewportChangedListener!!)
 
-        gestureStateChangedListener = PdfView.OnGestureStateChangedListener { newState: Int ->
-            autoScrollManager.lastUserInteractionTime = SystemClock.uptimeMillis()
-            autoScrollManager.isUserTouching = newState != PdfView.GESTURE_STATE_IDLE
+        autoScrollManager.setPdfViewerFragment(this)
+
+        gestureStateChangedListener = object : PdfView.OnGestureStateChangedListener {
+            override fun onGestureStateChanged(newState: Int) {
+                if (autoScrollManager.isSimulatingTouch) return // Ignore simulated nudges
+                autoScrollManager.lastUserInteractionTime = SystemClock.uptimeMillis()
+                autoScrollManager.isUserTouching = newState != PdfView.GESTURE_STATE_IDLE
+            }
         }
         pdfView.addOnGestureStateChangedListener(gestureStateChangedListener!!)
 
@@ -174,7 +185,7 @@ class PdfViewerFragment : Fragment() {
     }
 
     private fun setupAutoScrollControls() {
-        binding.fabAutoScroll.setOnClickListener { autoScrollManager.toggleAutoScroll(pdfScrollableView) }
+        binding.fabAutoScroll.setOnClickListener { autoScrollManager.toggleAutoScroll() }
         binding.btnTimeMinus.setOnClickListener { autoScrollManager.handleTimeMinus() }
         binding.btnTimePlus.setOnClickListener { autoScrollManager.handleTimePlus() }
         binding.tvDurationDisplay.setOnClickListener { autoScrollManager.showDurationPickerDialog {} }
@@ -182,6 +193,56 @@ class PdfViewerFragment : Fragment() {
 
     private fun updateFabIcon(isPlaying: Boolean) {
         binding.fabAutoScroll.setImageResource(if (isPlaying) android.R.drawable.ic_media_pause else android.R.drawable.ic_media_play)
+    }
+
+    fun getEstimatedTotalDistance(): Float {
+        val totalPages = androidXPdfFragment?.pageCount ?: 0
+        val fallbackRange = computePdfVerticalScrollRange().toFloat()
+
+        if (totalPages == 0 || currentPageLocations.size() == 0) {
+            return fallbackRange
+        }
+
+        var sumHeight = 0f
+        for (i in 0 until currentPageLocations.size()) {
+            sumHeight += currentPageLocations.valueAt(i).height()
+        }
+        val avgHeight = sumHeight / currentPageLocations.size()
+
+        // Fallback 5% gap between pages. Measure exact gap if 2+ pages are visible.
+        var gap = avgHeight * 0.05f 
+        if (currentPageLocations.size() > 1) {
+            val first = currentPageLocations.valueAt(0)
+            val second = currentPageLocations.valueAt(1)
+            val measuredGap = second.top - first.bottom
+            if (measuredGap > 0 && measuredGap < avgHeight) {
+                gap = measuredGap
+            }
+        }
+        val semanticDistance = (avgHeight + gap) * totalPages
+        
+        // Return the larger of the two to guarantee we always have a distance > 0
+        return maxOf(semanticDistance, fallbackRange)
+    }
+
+    private fun computePdfVerticalScrollRange(): Int {
+        val pdfView = pdfScrollableView ?: return 0
+        return try {
+            val method = View::class.java.getDeclaredMethod("computeVerticalScrollRange")
+            method.isAccessible = true
+            method.invoke(pdfView) as Int
+        } catch (e: Exception) {
+            pdfView.height
+        }
+    }
+
+    fun isLastPageVisible(): Boolean {
+        val totalPages = androidXPdfFragment?.pageCount ?: 0
+        if (totalPages <= 0) return false
+        for (i in 0 until currentPageLocations.size()) {
+            if (currentPageLocations.keyAt(i) >= totalPages - 1) return true
+        }
+        return false
     }
 
     private fun setupPageDelegate() {
@@ -255,7 +316,7 @@ class PdfViewerFragment : Fragment() {
 
     private fun updateNoDrawRegions() {
         val regions = mutableListOf<android.graphics.Rect>()
-        listOf(binding.controlsContainer, binding.annotationToolbarContainer).forEach {
+        listOf(binding.controlsContainer).forEach {
             if (it.visibility == View.VISIBLE) {
                 val rect = android.graphics.Rect()
                 it.getGlobalVisibleRect(rect)
@@ -303,11 +364,11 @@ class PdfViewerFragment : Fragment() {
 
     private fun setupSettingsListeners() {
         val colorButtons: Map<View, Int> = mapOf(
-            binding.btnColorBlack to ContextCompat.getColor(requireContext(), R.color.ann_black),
-            binding.btnColorWhite to ContextCompat.getColor(requireContext(), R.color.ann_white),
             binding.btnColorDarkCyan to ContextCompat.getColor(requireContext(), R.color.ann_dark_cyan),
             binding.btnColorOliveDark to ContextCompat.getColor(requireContext(), R.color.ann_olive_dark),
-            binding.btnColorAmber to ContextCompat.getColor(requireContext(), R.color.ann_amber)
+            binding.btnColorMaroon to ContextCompat.getColor(requireContext(), R.color.ann_maroon),
+            binding.btnColorWhite to ContextCompat.getColor(requireContext(), R.color.ann_white),
+            binding.btnColorBlack to ContextCompat.getColor(requireContext(), R.color.ann_black)
         )
         colorButtons.forEach { (btn, color) -> btn.setOnClickListener { updateCurrentToolColor(color) } }
         binding.btnColorCustom.setOnClickListener { showColorPickerDialog() }
@@ -371,11 +432,11 @@ class PdfViewerFragment : Fragment() {
 
     private fun updateColorSwatchSelection(selectedColor: Int) {
         val colorButtons: Map<View, Int> = mapOf(
-            binding.btnColorBlack to ContextCompat.getColor(requireContext(), R.color.ann_black),
-            binding.btnColorWhite to ContextCompat.getColor(requireContext(), R.color.ann_white),
             binding.btnColorDarkCyan to ContextCompat.getColor(requireContext(), R.color.ann_dark_cyan),
             binding.btnColorOliveDark to ContextCompat.getColor(requireContext(), R.color.ann_olive_dark),
-            binding.btnColorAmber to ContextCompat.getColor(requireContext(), R.color.ann_amber)
+            binding.btnColorMaroon to ContextCompat.getColor(requireContext(), R.color.ann_maroon),
+            binding.btnColorWhite to ContextCompat.getColor(requireContext(), R.color.ann_white),
+            binding.btnColorBlack to ContextCompat.getColor(requireContext(), R.color.ann_black)
         )
         colorButtons.forEach { (btn, color) ->
             btn.setBackgroundResource(if (color == selectedColor) R.drawable.bg_color_swatch_selected else R.drawable.bg_color_swatch_unselected)

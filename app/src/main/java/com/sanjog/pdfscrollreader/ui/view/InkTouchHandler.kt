@@ -18,10 +18,14 @@ class InkTouchHandler(private val view: InkCanvasView) {
     private var selectionMoved = false
 
     fun handleDown(x: Float, y: Float) {
+        val delegate = view.pageDelegate
+        val pageIndex = delegate?.getPageIndexAtPoint(x, y) ?: -1
+        if (pageIndex == -1 && !isSelectionTool(view.currentTool) && view.currentTool != ToolType.ERASER) {
+            return
+        }
+
         view.onDrawingStateChangedListener?.invoke(true)
         android.util.Log.d("INK_DEBUG", "handleDown: x=$x y=$y tool=${view.currentTool} delegate=${view.pageDelegate != null}")
-        val delegate = view.pageDelegate
-        val pageIndex = (delegate?.getPageIndexAtPoint(x, y) ?: 0).coerceAtLeast(0)
 
         lastTouchX = x
         lastTouchY = y

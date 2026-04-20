@@ -20,7 +20,7 @@
     <color name="ann_white">#FFFFFF</color>
     <color name="ann_dark_cyan">#008B8B</color>
     <color name="ann_olive_dark">#556B2F</color>
-    <color name="ann_amber">#FFBF00</color>
+    <color name="ann_maroon">#800000</color>
 
     <!-- Brand Palette: Dark Glassmorphism -->
     <color name="colorBackgroundDark">#0B111A</color>

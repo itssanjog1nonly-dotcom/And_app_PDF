@@ -55,6 +55,7 @@ dependencies {
     implementation("androidx.pdf:pdf-viewer-fragment:1.0.0-alpha17")
     implementation("androidx.pdf:pdf-ink:1.0.0-alpha17")
     implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")

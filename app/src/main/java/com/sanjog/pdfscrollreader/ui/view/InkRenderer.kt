@@ -45,28 +45,46 @@ class InkRenderer(private val view: InkCanvasView) {
         val delegate = view.pageDelegate
 
         for (stroke in view.strokes) {
-            stroke.updatePath(delegate)
-            if (!stroke.path.isEmpty) {
-                strokePaint.color = stroke.color
-                strokePaint.strokeWidth = stroke.strokeWidth * view.currentZoom
-                strokePaint.alpha = if (stroke.tool == ToolType.HIGHLIGHTER) 100 else 255
-                strokePaint.style = Paint.Style.STROKE
-                canvas.drawPath(stroke.path, strokePaint)
+            val bounds = delegate?.getPageBounds(stroke.pageIndex)
+            if (bounds != null) {
+                canvas.save()
+                canvas.clipRect(bounds)
+                stroke.updatePath(delegate)
+                if (!stroke.path.isEmpty) {
+                    strokePaint.color = stroke.color
+                    strokePaint.strokeWidth = stroke.strokeWidth * view.currentZoom
+                    strokePaint.alpha = if (stroke.tool == ToolType.HIGHLIGHTER) 100 else 255
+                    strokePaint.style = Paint.Style.STROKE
+                    canvas.drawPath(stroke.path, strokePaint)
+                }
+                canvas.restore()
             }
         }
 
         for (shape in view.shapes) {
-            drawShapeScreenSpace(canvas, shape, delegate)
+            val bounds = delegate?.getPageBounds(shape.pageIndex)
+            if (bounds != null) {
+                canvas.save()
+                canvas.clipRect(bounds)
+                drawShapeScreenSpace(canvas, shape, delegate)
+                canvas.restore()
+            }
         }
 
         view.activeStroke?.let { stroke ->
-            stroke.updatePath(delegate, force = true)
-            if (!stroke.path.isEmpty) {
-                strokePaint.style = Paint.Style.STROKE
-                strokePaint.color = stroke.color
-                strokePaint.strokeWidth = stroke.strokeWidth * view.currentZoom
-                strokePaint.alpha = if (stroke.tool == ToolType.HIGHLIGHTER) 100 else 255
-                canvas.drawPath(stroke.path, strokePaint)
+            val bounds = delegate?.getPageBounds(stroke.pageIndex)
+            if (bounds != null) {
+                canvas.save()
+                canvas.clipRect(bounds)
+                stroke.updatePath(delegate, force = true)
+                if (!stroke.path.isEmpty) {
+                    strokePaint.style = Paint.Style.STROKE
+                    strokePaint.color = stroke.color
+                    strokePaint.strokeWidth = stroke.strokeWidth * view.currentZoom
+                    strokePaint.alpha = if (stroke.tool == ToolType.HIGHLIGHTER) 100 else 255
+                    canvas.drawPath(stroke.path, strokePaint)
+                }
+                canvas.restore()
             }
         }
 

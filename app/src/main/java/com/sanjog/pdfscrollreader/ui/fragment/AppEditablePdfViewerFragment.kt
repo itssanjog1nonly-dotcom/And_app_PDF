@@ -52,6 +52,31 @@ class AppEditablePdfViewerFragment : EditablePdfViewerFragment() {
         listener?.onPdfViewCreated(pdfView)
     }
 
+    val pageCount: Int
+        get() = currentPdfView?.let { view ->
+            try {
+                val modelField = view.javaClass.getDeclaredField("mModel")
+                modelField.isAccessible = true
+                val model = modelField.get(view)
+                val countMethod = model.javaClass.getMethod("getPageCount")
+                countMethod.invoke(model) as Int
+            } catch (e: Exception) {
+                0
+            }
+        } ?: 0
+
+    fun getPageBounds(pageIndex: Int): android.graphics.RectF? {
+        return currentPdfView?.let { view ->
+            try {
+                // Trying to get the page locations via reflection if possible
+                val method = view.javaClass.getMethod("getPageLocation", Int::class.java)
+                method.invoke(view, pageIndex) as? android.graphics.RectF
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+
     /**
      * Expose the protected computeVerticalScrollRange from PdfView
      */

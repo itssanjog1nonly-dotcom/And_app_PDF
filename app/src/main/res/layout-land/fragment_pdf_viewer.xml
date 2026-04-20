@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#CC1A1A1A"
+        android:background="@android:color/transparent"
         android:elevation="20dp"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
@@ -88,13 +88,17 @@
 
             <LinearLayout
                 android:id="@+id/annotation_toolbar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_page_indicator"
                 android:orientation="vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-            android:divider="@drawable/bg_divider_vertical_spacer"
-            android:showDividers="middle">
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="8dp"
+                android:divider="@drawable/bg_divider_vertical_spacer"
+                android:showDividers="middle"
+                android:elevation="8dp">
 
             <!-- Row 1: Tools & Actions -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -148,11 +152,11 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:gravity="center_vertical">
-                        <ImageButton android:id="@+id/btn_color_black" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_black" />
-                        <ImageButton android:id="@+id/btn_color_white" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_white" />
                         <ImageButton android:id="@+id/btn_color_dark_cyan" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_dark_cyan" />
                         <ImageButton android:id="@+id/btn_color_olive_dark" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_olive_dark" />
-                        <ImageButton android:id="@+id/btn_color_amber" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_amber" />
+                        <ImageButton android:id="@+id/btn_color_maroon" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_maroon" />
+                        <ImageButton android:id="@+id/btn_color_white" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_white" />
+                        <ImageButton android:id="@+id/btn_color_black" style="@style/AnnotationColorSwatch" android:backgroundTint="@color/ann_black" />
                         <ImageButton android:id="@+id/btn_color_custom" style="@style/AnnotationColorSwatch" android:src="@android:drawable/ic_menu_gallery" app:tint="@color/white" />
                     </LinearLayout>
                 </HorizontalScrollView>
