@@ -1,54 +1,75 @@
-// FILE: app/src/main/java/com/sanjog/pdfscrollreader/util/AnnotationSerializer.kt
 package com.sanjog.pdfscrollreader.util
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.sanjog.pdfscrollreader.data.model.AnnotationData
 import java.io.File
-import java.security.MessageDigest
+import java.io.FileReader
+import java.io.FileWriter
 
 object AnnotationSerializer {
-    private val gson: Gson = Gson()
+    private const val TAG = "AnnotationSerializer"
+    
+    // Configured Gson to handle complex generic types securely
+    private val gson: Gson = GsonBuilder().create()
 
-    fun toJson(data: AnnotationData): String {
-        return gson.toJson(data)
-    }
-
-    fun fromJson(json: String): AnnotationData? {
-        return try {
-            gson.fromJson(json, AnnotationData::class.java)
-        } catch (_: Exception) {
-            null
-        }
+    private fun getFile(context: Context, pdfHash: String): File {
+        val dir = File(context.filesDir, "annotations")
+        if (!dir.exists()) dir.mkdirs()
+        return File(dir, "$pdfHash.json")
     }
 
     fun saveToFile(context: Context, data: AnnotationData) {
-        val pdfHash = md5(data.pdfPath)
-        val annotationsDir = File(context.filesDir, "annotations")
-        if (!annotationsDir.exists()) {
-            annotationsDir.mkdirs()
+        try {
+            val file = getFile(context, data.pdfPath)
+            val json = gson.toJson(data)
+            FileWriter(file).use { writer ->
+                writer.write(json)
+            }
+            Log.d(TAG, "Successfully saved annotations to ${file.absolutePath}. Size: ${json.length} bytes")
+        } catch (e: Exception) {
+            Log.e(TAG, "CRITICAL ERROR: Failed to save annotations", e)
         }
-        val file = File(annotationsDir, "$pdfHash.json")
-        file.writeText(toJson(data))
     }
 
     fun loadFromFile(context: Context, pdfHash: String): AnnotationData? {
-        val file = File(File(context.filesDir, "annotations"), "$pdfHash.json")
-        if (!file.exists()) {
+        try {
+            val file = getFile(context, pdfHash)
+            if (!file.exists()) {
+                Log.w(TAG, "No annotation file found at ${file.absolutePath}")
+                return null
+            }
+
+            FileReader(file).use { reader ->
+                // Use explicit TypeToken to force Map<Int, ...> instead of Map<String, ...>
+                val type = object : TypeToken<AnnotationData>() {}.type
+                val data: AnnotationData? = gson.fromJson(reader, type)
+                
+                if (data != null) {
+                    Log.d(TAG, "Successfully loaded annotations from ${file.absolutePath}")
+                    return data
+                } else {
+                    Log.e(TAG, "Gson returned null during deserialization!")
+                    return null
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "CRITICAL ERROR: Failed to load annotations", e)
             return null
         }
-        return fromJson(file.readText())
     }
 
     fun deleteFile(context: Context, pdfHash: String) {
-        val file = File(File(context.filesDir, "annotations"), "$pdfHash.json")
-        if (file.exists()) {
-            file.delete()
+        try {
+            val file = getFile(context, pdfHash)
+            if (file.exists() && file.delete()) {
+                Log.d(TAG, "Deleted annotation file: ${file.absolutePath}")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to delete annotation file", e)
         }
-    }
-
-    private fun md5(input: String): String {
-        val bytes = MessageDigest.getInstance("MD5").digest(input.toByteArray(Charsets.UTF_8))
-        return bytes.joinToString(separator = "") { byte -> "%02x".format(byte) }
     }
 }

@@ -72,58 +72,28 @@ class PdfExportManager(
                         // Open content stream in APPEND mode to draw over existing PDF content
                         PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, true, true).use { contentStream ->
                             
-                            // 1. Draw Shapes
-                            for (shape in pageShapes) {
-                                // PDFBox uses 0-1f for colors
-                                val strokeR = Color.red(shape.strokeColor) / 255f
-                                val strokeG = Color.green(shape.strokeColor) / 255f
-                                val strokeB = Color.blue(shape.strokeColor) / 255f
-                                val strokeA = Color.alpha(shape.strokeColor) / 255f
-
-                                val extGState = PDExtendedGraphicsState()
-                                extGState.setStrokingAlphaConstant(strokeA)
-                                extGState.setNonStrokingAlphaConstant(shape.fillAlpha / 255f)
-                                contentStream.setGraphicsStateParameters(extGState)
-
-                                contentStream.setLineWidth(shape.strokeWidth)
-                                contentStream.setStrokingColor(strokeR, strokeG, strokeB)
-                                
-                                val fillR = Color.red(shape.fillColor) / 255f
-                                val fillG = Color.green(shape.fillColor) / 255f
-                                val fillB = Color.blue(shape.fillColor) / 255f
-                                contentStream.setNonStrokingColor(fillR, fillG, fillB)
-
-                                // Convert Normalized coords to PDF Points (Bottom-Left Origin)
-                                val x = originX + (shape.normLeft * pdfWidth)
-                                val w = (shape.normRight - shape.normLeft) * pdfWidth
-                                val h = (shape.normBottom - shape.normTop) * pdfHeight
-                                val y = originY + pdfHeight - (shape.normTop * pdfHeight) - h // Y is flipped!
-
-                                when (shape.shapeType) {
-                                    ShapeType.RECTANGLE -> {
-                                        contentStream.addRect(x, y, w, h)
-                                        if (shape.fillAlpha > 0) contentStream.fillAndStroke() else contentStream.stroke()
-                                    }
-                                    ShapeType.ELLIPSE -> {
-                                        // Approximate Ellipse with Bezier Curves or just use Rect for now as fallback
-                                        // (Implementation for proper ellipse requires curveTo, but bounding box rect works as a basic implementation)
-                                        contentStream.addRect(x, y, w, h)
-                                        if (shape.fillAlpha > 0) contentStream.fillAndStroke() else contentStream.stroke()
-                                    }
-                                    ShapeType.FREEFORM -> { } // Handled via strokes
-                                }
-                            }
-
-                            // 2. Draw Ink Strokes (Pen & Highlighter)
+                            // 1. Draw Ink Strokes (Pen & Highlighter) FIRST so they are on the bottom layer
                             for (stroke in pageStrokes) {
                                 if (stroke.points.isEmpty() || stroke.tool == ToolType.ERASER) continue
 
                                 val r = Color.red(stroke.color) / 255f
                                 val g = Color.green(stroke.color) / 255f
                                 val b = Color.blue(stroke.color) / 255f
-                                val alpha = Color.alpha(stroke.color) / 255f
+                                var alpha = Color.alpha(stroke.color) / 255f
 
                                 val extGState = PDExtendedGraphicsState()
+
+                                // Fix for Highlighter: The UI stores the color as opaque (#FFFF8800)
+                                // but renders it transparently. We must force transparency and use MULTIPLY blend.
+                                if (stroke.tool == ToolType.HIGHLIGHTER) {
+                                    if (alpha > 0.5f) {
+                                        alpha = 0.4f // Force 40% opacity for highlighters
+                                    }
+                                    extGState.setBlendMode(com.tom_roush.pdfbox.pdmodel.graphics.blend.BlendMode.MULTIPLY)
+                                } else {
+                                    extGState.setBlendMode(com.tom_roush.pdfbox.pdmodel.graphics.blend.BlendMode.NORMAL)
+                                }
+
                                 extGState.setStrokingAlphaConstant(alpha)
                                 extGState.setNonStrokingAlphaConstant(alpha)
                                 contentStream.setGraphicsStateParameters(extGState)
@@ -133,8 +103,6 @@ class PdfExportManager(
                                 contentStream.setLineCapStyle(1) // Round Cap
                                 contentStream.setLineJoinStyle(1) // Round Join
 
-                                // Assuming stroke.points are NORMALIZED (0.0 to 1.0). If they are screen pixels, 
-                                // Agent: please adjust mapping to divide by view width/height first.
                                 val startP = stroke.points[0]
                                 val startX = originX + (startP.x * pdfWidth)
                                 val startY = originY + pdfHeight - (startP.y * pdfHeight)
@@ -148,6 +116,100 @@ class PdfExportManager(
                                     contentStream.lineTo(px, py)
                                 }
                                 contentStream.stroke()
+                            }
+
+                            // 2. Draw Shapes SECOND so they render on top of the strokes
+                            for (shape in pageShapes) {
+                                val strokeR = Color.red(shape.strokeColor) / 255f
+                                val strokeG = Color.green(shape.strokeColor) / 255f
+                                val strokeB = Color.blue(shape.strokeColor) / 255f
+                                val strokeA = Color.alpha(shape.strokeColor) / 255f
+
+                                val fillR = Color.red(shape.fillColor) / 255f
+                                val fillG = Color.green(shape.fillColor) / 255f
+                                val fillB = Color.blue(shape.fillColor) / 255f
+                                val fillA = shape.fillAlpha / 255f
+
+                                val extGState = PDExtendedGraphicsState()
+                                extGState.setStrokingAlphaConstant(strokeA)
+                                extGState.setNonStrokingAlphaConstant(fillA)
+                                contentStream.setGraphicsStateParameters(extGState)
+
+                                // Logic to prevent "Double Alpha Borders"
+                                val hasFill = fillA > 0f
+                                var hasStroke = shape.strokeWidth > 0f && strokeA > 0f
+                                
+                                // If the fill and stroke are the same color and it is semi-transparent, 
+                                // DO NOT stroke it, otherwise the edges overlap and become twice as dark.
+                                val isSameColor = (strokeR == fillR && strokeG == fillG && strokeB == fillB)
+                                if (hasFill && isSameColor && fillA < 1.0f) {
+                                    hasStroke = false
+                                }
+                                // Freeform fills (Lasso Fill) usually do not have strokes
+                                if (hasFill && shape.shapeType == ShapeType.FREEFORM) {
+                                    hasStroke = false
+                                }
+
+                                if (hasStroke) {
+                                    contentStream.setLineWidth(shape.strokeWidth)
+                                    contentStream.setStrokingColor(strokeR, strokeG, strokeB)
+                                }
+                                if (hasFill) {
+                                    contentStream.setNonStrokingColor(fillR, fillG, fillB)
+                                }
+
+                                val x = originX + (shape.normLeft * pdfWidth)
+                                val w = (shape.normRight - shape.normLeft) * pdfWidth
+                                val h = (shape.normBottom - shape.normTop) * pdfHeight
+                                val y = originY + pdfHeight - (shape.normTop * pdfHeight) - h // Y is flipped!
+
+                                when (shape.shapeType) {
+                                    ShapeType.RECTANGLE -> {
+                                        contentStream.addRect(x, y, w, h)
+                                    }
+                                    ShapeType.ELLIPSE -> {
+                                        // Draw perfect ellipse using 4 cubic bezier curves
+                                        val kappa = 0.55228475f
+                                        val cx = x + w / 2f
+                                        val cy = y + h / 2f
+                                        val rx = w / 2f
+                                        val ry = h / 2f
+                                        val ox = rx * kappa
+                                        val oy = ry * kappa
+
+                                        contentStream.moveTo(cx + rx, cy)
+                                        contentStream.curveTo(cx + rx, cy + oy, cx + ox, cy + ry, cx, cy + ry)
+                                        contentStream.curveTo(cx - ox, cy + ry, cx - rx, cy + oy, cx - rx, cy)
+                                        contentStream.curveTo(cx - rx, cy - oy, cx - ox, cy - ry, cx, cy - ry)
+                                        contentStream.curveTo(cx + ox, cy - ry, cx + rx, cy - oy, cx + rx, cy)
+                                    }
+                                    ShapeType.FREEFORM -> {
+                                        if (!shape.points.isNullOrEmpty()) {
+                                            val startP = shape.points[0]
+                                            contentStream.moveTo(
+                                                originX + (startP.x * pdfWidth), 
+                                                originY + pdfHeight - (startP.y * pdfHeight)
+                                            )
+                                            for (i in 1 until shape.points.size) {
+                                                val p = shape.points[i]
+                                                contentStream.lineTo(
+                                                    originX + (p.x * pdfWidth), 
+                                                    originY + pdfHeight - (p.y * pdfHeight)
+                                                )
+                                            }
+                                            contentStream.closePath()
+                                        }
+                                    }
+                                }
+
+                                // Execute the draw operation cleanly
+                                if (hasFill && hasStroke) {
+                                    contentStream.fillAndStroke()
+                                } else if (hasFill) {
+                                    contentStream.fill()
+                                } else if (hasStroke) {
+                                    contentStream.stroke()
+                                }
                             }
                         }
                     }

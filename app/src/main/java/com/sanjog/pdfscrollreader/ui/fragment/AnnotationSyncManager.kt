@@ -14,11 +14,12 @@ import com.sanjog.pdfscrollreader.ui.view.ToolType
 
 class AnnotationSyncManager(private val context: Context) {
 
-    fun saveAnnotations(pdfUri: Uri?, inkCanvasView: InkCanvasView) {
+    fun saveAnnotations(pdfUri: Uri?, uiStrokes: List<Stroke>, uiShapes: List<ShapeAnnotation>) {
         val uri = pdfUri ?: return
-        val uiStrokes = inkCanvasView.getStrokes()
-        val uiShapes = inkCanvasView.getShapes()
         val appContext = context.applicationContext
+        
+        // Sanitize URI to create a safe filename/hash (removes slashes)
+        val safeHash = uri.toString().hashCode().toString()
 
         val strokesByPage = uiStrokes.groupBy { it.pageIndex.coerceAtLeast(0) }
             .mapValues { (_, strokes) -> strokes.map(::mapToDataStroke) }
@@ -26,20 +27,22 @@ class AnnotationSyncManager(private val context: Context) {
             .mapValues { (_, shapes) -> shapes.map(::mapToDataShape) }
 
         val data = com.sanjog.pdfscrollreader.data.model.AnnotationData(
-            pdfPath = uri.toString(),
+            pdfPath = safeHash, // Use safeHash so serializer doesn't crash on slashes
             annotations = strokesByPage,
             shapes = shapesByPage
         )
 
         val repo = com.sanjog.pdfscrollreader.data.repository.AnnotationRepository(appContext)
         repo.save(data)
-        Log.d("AnnotationSync", "Saved ${uiStrokes.size} strokes and ${uiShapes.size} shapes")
+        Log.d("AnnotationSync", "Saved ${uiStrokes.size} strokes and ${uiShapes.size} shapes under hash $safeHash")
     }
 
     fun loadAnnotations(pdfUri: Uri?, inkCanvasView: InkCanvasView) {
         val uri = pdfUri ?: return
+        val safeHash = uri.toString().hashCode().toString()
+        
         val repo = com.sanjog.pdfscrollreader.data.repository.AnnotationRepository(context)
-        val data = repo.load(uri.toString()) ?: return
+        val data = repo.load(safeHash) ?: return
         
         val allUiStrokes = mutableListOf<Stroke>()
         data.annotations.forEach { (page, strokes) ->
@@ -52,7 +55,7 @@ class AnnotationSyncManager(private val context: Context) {
         
         inkCanvasView.setStrokes(allUiStrokes)
         inkCanvasView.setShapes(allUiShapes)
-        Log.d("AnnotationSync", "Loaded ${allUiStrokes.size} strokes and ${allUiShapes.size} shapes")
+        Log.d("AnnotationSync", "Loaded ${allUiStrokes.size} strokes and ${allUiShapes.size} shapes from hash $safeHash")
     }
 
     private fun mapToDataStroke(uiStroke: Stroke): com.sanjog.pdfscrollreader.data.model.Stroke {

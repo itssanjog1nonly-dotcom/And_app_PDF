@@ -136,7 +136,11 @@ class PdfViewerFragment : Fragment() {
         childFragmentManager.beginTransaction().replace(R.id.pdf_viewer_container, fragment).commit()
 
         binding.inkCanvasView.onChangeListener = object : OnChangeListener {
-            override fun onChange() { annotationSync.saveAnnotations(pdfUri, binding.inkCanvasView) }
+            override fun onChange() {
+                val currentStrokes = binding.inkCanvasView.getStrokes().toList()
+                val currentShapes = binding.inkCanvasView.getShapes().toList()
+                annotationSync.saveAnnotations(pdfUri, currentStrokes, currentShapes)
+            }
         }
         binding.inkCanvasView.onHistoryChangedListener = { canUndo, canRedo ->
             binding.btnUndo.isEnabled = canUndo
@@ -146,6 +150,9 @@ class PdfViewerFragment : Fragment() {
         }
         binding.inkCanvasView.onHistoryChangedListener?.invoke(false, false)
         binding.inkCanvasView.onDrawingStateChangedListener = { isDrawing -> autoScrollManager.isDrawing = isDrawing }
+        
+        loadToolSettings()
+        setupSettingsListeners()
     }
 
     private fun setupPdfView(pdfView: PdfView, fragment: AppEditablePdfViewerFragment) {
@@ -380,6 +387,7 @@ class PdfViewerFragment : Fragment() {
                     binding.tvPenWidthValue.setText(p.toString())
                     toolSettings[ToolType.PEN]?.width = w
                     if (currentTool != ToolType.HIGHLIGHTER) { binding.inkCanvasView.setPenWidth(w); binding.inkCanvasView.updateSelectedProperties(null, w) }
+                    saveToolSettings()
                 }
             }
             override fun onStartTrackingTouch(s: android.widget.SeekBar?) {}
@@ -393,6 +401,7 @@ class PdfViewerFragment : Fragment() {
                     binding.tvHighlighterWidthValue.setText(p.toString())
                     toolSettings[ToolType.HIGHLIGHTER]?.width = w
                     if (currentTool == ToolType.HIGHLIGHTER) { binding.inkCanvasView.setHighlighterWidth(w); binding.inkCanvasView.updateSelectedProperties(null, w) }
+                    saveToolSettings()
                 }
             }
             override fun onStartTrackingTouch(s: android.widget.SeekBar?) {}
@@ -428,6 +437,7 @@ class PdfViewerFragment : Fragment() {
         if (tool == ToolType.HIGHLIGHTER) binding.inkCanvasView.setHighlighterColor(color) else binding.inkCanvasView.setPenColor(color)
         binding.inkCanvasView.updateSelectedProperties(color, null)
         updateColorSwatchSelection(color)
+        saveToolSettings()
     }
 
     private fun updateColorSwatchSelection(selectedColor: Int) {
@@ -468,7 +478,43 @@ class PdfViewerFragment : Fragment() {
         dialog.show()
     }
 
-    override fun onPause() { super.onPause(); savePosition(); lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) { annotationSync.saveAnnotations(pdfUri, binding.inkCanvasView) } }
+    private fun saveToolSettings() {
+        val prefs = requireContext().getSharedPreferences("PdfToolSettings", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        
+        toolSettings.forEach { (tool, settings) ->
+            editor.putInt("${tool.name}_color", settings.color)
+            editor.putFloat("${tool.name}_width", settings.width)
+        }
+        editor.putInt("last_custom_color", lastCustomColor)
+        editor.apply()
+    }
+
+    private fun loadToolSettings() {
+        val prefs = requireContext().getSharedPreferences("PdfToolSettings", Context.MODE_PRIVATE)
+        
+        toolSettings.forEach { (tool, settings) ->
+            settings.color = prefs.getInt("${tool.name}_color", settings.color)
+            settings.width = prefs.getFloat("${tool.name}_width", settings.width)
+        }
+        lastCustomColor = prefs.getInt("last_custom_color", Color.GRAY)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        savePosition()
+        
+        // 1. Extract data on Main Thread before UI is destroyed
+        val currentUri = pdfUri
+        val currentStrokes = binding.inkCanvasView.getStrokes().toList()
+        val currentShapes = binding.inkCanvasView.getShapes().toList()
+        
+        // 2. Launch in GlobalScope + NonCancellable so Android doesn't kill the save process
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
+        kotlinx.coroutines.GlobalScope.launch(kotlinx.coroutines.Dispatchers.IO + kotlinx.coroutines.NonCancellable) {
+            annotationSync.saveAnnotations(currentUri, currentStrokes, currentShapes)
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         autoScrollManager.onDestroy()
