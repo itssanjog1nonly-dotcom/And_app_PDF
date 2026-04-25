@@ -16,7 +16,12 @@ I built **PdfScrollReader** to solve this. It allows users to import PDFs, calcu
 *   **Persistent State:** Utilizes `Gson` and Kotlin Coroutines for safe, lifecycle-aware background saving of UI coordinates and tool preferences.
 
 ## 📸 Screenshots
-*(Placeholder: Add screenshots of the File Picker, the Auto-Scroll UI, and the Annotation Tools here)*
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS1.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS2.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS3.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS4.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS5.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS6.jpg)
 
 ## 🛠 Built With
 *   **Kotlin** - Primary programming language.
