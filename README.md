@@ -4,7 +4,7 @@ A musician-focused Android PDF reader optimized for live performance. Features d
 
 ## 📱 About The Project
 
-As a musician, I needed a way to read sheet music and chord charts hands-free while performing, and a way to take quick, permanent notes during rehearsals. Existing apps were either too expensive, lacked smooth auto-scroll, or had poor stylus support. 
+As a musician, I needed a way to read sheet music and chord charts hands-free while performing, and a way to take quick, permanent notes during rehearsals. I did not found any existing apps for such purpose, some apps either lacked smooth auto-scroll, or had poor stylus support. 
 
 I built **PdfScrollReader** to solve this. It allows users to import PDFs, calculate precise auto-scroll speeds based on song duration, draw high-fidelity annotations using a stylus, and export those annotations permanently burned into the PDF.
 
