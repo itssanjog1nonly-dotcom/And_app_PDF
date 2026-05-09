@@ -1,6 +1,7 @@
 package com.sanjog.pdfscrollreader.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,6 +14,15 @@ class SetlistEntryAdapter(
     private val onDeleteClick: (SetlistEntry) -> Unit,
     private val onLongClick: (SetlistEntry) -> Unit
 ) : ListAdapter<SetlistEntry, SetlistEntryAdapter.ViewHolder>(DiffCallback) {
+
+    private var isSelectionMode = false
+    private var selectedIds: Set<String> = emptySet()
+
+    fun setSelectionState(selectionMode: Boolean, ids: Set<String>) {
+        isSelectionMode = selectionMode
+        selectedIds = ids.toSet()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemSetlistEntryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -39,9 +49,30 @@ class SetlistEntryAdapter(
             val mins = item.durationMinutes
             if (mins > 0) {
                 binding.tvDuration.text = String.format("%02d:00", mins)
-                binding.tvDuration.visibility = android.view.View.VISIBLE
+                binding.tvDuration.visibility = View.VISIBLE
             } else {
-                binding.tvDuration.visibility = android.view.View.GONE
+                binding.tvDuration.visibility = View.GONE
+            }
+
+            // Selection mode visuals
+            val isSelected = selectedIds.contains(item.id)
+            if (isSelectionMode) {
+                binding.btnDelete.visibility = View.GONE
+                binding.root.alpha = if (isSelected) 1.0f else 0.5f
+                binding.root.strokeWidth = if (isSelected) 3 else 1
+                binding.root.strokeColor = if (isSelected) {
+                    binding.root.context.getColor(com.sanjog.pdfscrollreader.R.color.colorAccentCyan)
+                } else {
+                    binding.root.context.getColor(com.sanjog.pdfscrollreader.R.color.colorGlassBorder)
+                }
+                // Show checkmark in index position when selected
+                binding.tvIndex.text = if (isSelected) "✓" else index.toString()
+            } else {
+                binding.btnDelete.visibility = View.VISIBLE
+                binding.root.alpha = 1.0f
+                binding.root.strokeWidth = 1
+                binding.root.strokeColor = binding.root.context.getColor(com.sanjog.pdfscrollreader.R.color.colorGlassBorder)
+                binding.tvIndex.text = index.toString()
             }
 
             binding.root.setOnClickListener { onItemClick(item) }
@@ -58,3 +89,4 @@ class SetlistEntryAdapter(
         override fun areContentsTheSame(oldItem: SetlistEntry, newItem: SetlistEntry): Boolean = oldItem == newItem
     }
 }
+

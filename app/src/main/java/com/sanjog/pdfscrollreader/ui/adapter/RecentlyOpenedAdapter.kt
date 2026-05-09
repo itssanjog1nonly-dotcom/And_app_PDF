@@ -12,7 +12,8 @@ import java.util.Date
 import java.util.Locale
 
 class RecentlyOpenedAdapter(
-    private val onItemClick: (RecentlyOpenedEntry) -> Unit
+    private val onItemClick: (RecentlyOpenedEntry) -> Unit,
+    private val onLongClick: ((RecentlyOpenedEntry) -> Unit)? = null
 ) : ListAdapter<RecentlyOpenedEntry, RecentlyOpenedAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,6 +40,10 @@ class RecentlyOpenedAdapter(
             binding.tvInfo.text = info
 
             binding.root.setOnClickListener { onItemClick(item) }
+            binding.root.setOnLongClickListener {
+                onLongClick?.invoke(item)
+                onLongClick != null
+            }
         }
     }
 
@@ -47,3 +52,4 @@ class RecentlyOpenedAdapter(
         override fun areContentsTheSame(oldItem: RecentlyOpenedEntry, newItem: RecentlyOpenedEntry): Boolean = oldItem == newItem
     }
 }
+

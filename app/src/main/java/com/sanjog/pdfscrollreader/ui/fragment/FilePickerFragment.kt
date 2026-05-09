@@ -7,12 +7,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.sanjog.pdfscrollreader.databinding.FragmentFilePickerBinding
 import com.sanjog.pdfscrollreader.ui.MainActivity
 import com.sanjog.pdfscrollreader.ui.adapter.RecentlyOpenedAdapter
+import com.sanjog.pdfscrollreader.data.model.RecentlyOpenedEntry
+import com.sanjog.pdfscrollreader.data.model.SetlistEntry
 import com.sanjog.pdfscrollreader.data.repository.RecentlyOpenedRepository
+import com.sanjog.pdfscrollreader.data.repository.SetlistRepository
 import androidx.recyclerview.widget.LinearLayoutManager
 
 class FilePickerFragment : Fragment() {
@@ -76,12 +81,63 @@ class FilePickerFragment : Fragment() {
     }
 
     private fun setupRecentRecyclerView() {
-        recentAdapter = RecentlyOpenedAdapter { entry ->
-            val uri = Uri.parse(entry.uri)
-            listener?.onPdfSelected(uri)
-        }
+        recentAdapter = RecentlyOpenedAdapter(
+            onItemClick = { entry ->
+                val uri = Uri.parse(entry.uri)
+                listener?.onPdfSelected(uri)
+            },
+            onLongClick = { entry ->
+                showRecentFileOptionsDialog(entry)
+            }
+        )
         binding.rvRecentlyOpened.layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecentlyOpened.adapter = recentAdapter
+    }
+
+    private fun showRecentFileOptionsDialog(entry: RecentlyOpenedEntry) {
+        val options = arrayOf("Open", "Add to Setlist...")
+        AlertDialog.Builder(requireContext())
+            .setTitle(entry.displayName)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> {
+                        val uri = Uri.parse(entry.uri)
+                        listener?.onPdfSelected(uri)
+                    }
+                    1 -> showAddToSetlistDialog(entry)
+                }
+            }
+            .show()
+    }
+
+    private fun showAddToSetlistDialog(entry: RecentlyOpenedEntry) {
+        val repo = SetlistRepository(requireContext())
+        val setlists = repo.getAll()
+        if (setlists.isEmpty()) {
+            Toast.makeText(requireContext(), "No setlists yet. Create one first!", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val names = setlists.map { it.name }.toTypedArray()
+        AlertDialog.Builder(requireContext())
+            .setTitle("Add to Setlist")
+            .setItems(names) { _, which ->
+                val target = setlists[which]
+                val uri = entry.uri
+                // Duplicate check
+                if (target.entries.any { it.pdfUri == uri }) {
+                    Toast.makeText(requireContext(), "Already in ${target.name}", Toast.LENGTH_SHORT).show()
+                    return@setItems
+                }
+                val newEntry = SetlistEntry(
+                    pdfUri = uri,
+                    displayName = entry.displayName,
+                    orderIndex = target.entries.size
+                )
+                repo.addEntry(target.id, newEntry)
+                Toast.makeText(requireContext(), "Added to ${target.name}", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun loadRecentlyOpened() {

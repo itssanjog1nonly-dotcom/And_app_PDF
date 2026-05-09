@@ -9,7 +9,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
 import com.sanjog.pdfscrollreader.R
 import com.sanjog.pdfscrollreader.databinding.ActivityMainBinding
@@ -53,6 +55,8 @@ class MainActivity : AppCompatActivity(),
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                     binding.toolbar.subtitle = "Tap folder to open PDF"
+                    // Restore non-immersive mode when leaving PDF viewer
+                    setImmersiveMode(false)
                 } else {
                     isEnabled = false
                     onBackPressedDispatcher.onBackPressed()
@@ -119,6 +123,33 @@ class MainActivity : AppCompatActivity(),
             .replace(R.id.fragment_container, fragment)
             .addToBackStack("pdf_viewer")
             .commit()
+        
+        // Enter immersive mode for PDF viewing
+        setImmersiveMode(true)
     }
 
+    /**
+     * Toggle true fullscreen immersive mode.
+     * Hides status bar, navigation bar, and the app's own toolbar.
+     */
+    fun setImmersiveMode(enabled: Boolean) {
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        if (enabled) {
+            // Hide system bars
+            insetsController.hide(WindowInsetsCompat.Type.systemBars())
+            insetsController.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            // Hide app toolbar
+            binding.toolbar.visibility = View.GONE
+            (binding.toolbar.parent as? View)?.visibility = View.GONE // AppBarLayout
+        } else {
+            // Show system bars
+            insetsController.show(WindowInsetsCompat.Type.systemBars())
+            insetsController.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
+            // Show app toolbar
+            (binding.toolbar.parent as? View)?.visibility = View.VISIBLE
+            binding.toolbar.visibility = View.VISIBLE
+        }
+    }
 }
