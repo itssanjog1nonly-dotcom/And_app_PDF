@@ -101,13 +101,6 @@ class MainActivity : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_open -> {
-                // If we are in viewer, go back to picker
-                if (supportFragmentManager.backStackEntryCount > 0) {
-                    onBackPressedDispatcher.onBackPressed()
-                }
-                true
-            }
             R.id.action_export -> {
                 val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as? PdfViewerFragment
                 fragment?.triggerExport()
