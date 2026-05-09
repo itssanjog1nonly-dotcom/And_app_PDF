@@ -18,80 +18,86 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Normal toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:title="Setlist Detail"
-            app:titleTextColor="@color/white" />
-
-        <!-- Selection mode toolbar -->
-        <LinearLayout
-            android:id="@+id/selection_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#CC1A1A2E"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="8dp"
-            android:visibility="gone"
+            app:elevation="0dp"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
-                android:id="@+id/btn_selection_cancel"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Cancel selection"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                app:tint="@color/white" />
+            <!-- Normal toolbar -->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@android:drawable/ic_menu_revert"
+                app:title="Setlist Detail"
+                app:titleTextColor="@color/white" />
 
-            <TextView
-                android:id="@+id/tv_selection_count"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:text="0 selected"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <!-- Selection mode toolbar -->
+            <LinearLayout
+                android:id="@+id/selection_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="#CC1A1A2E"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="8dp"
+                android:visibility="gone">
 
-            <Button
-                android:id="@+id/btn_select_all"
-                style="?attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select All"
-                android:textAllCaps="false"
-                android:textColor="@color/colorAccentCyan"
-                android:textSize="14sp" />
+                <ImageButton
+                    android:id="@+id/btn_selection_cancel"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Cancel selection"
+                    android:src="@android:drawable/ic_menu_close_clear_cancel"
+                    app:tint="@color/white" />
 
-            <ImageButton
-                android:id="@+id/btn_selection_export"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Export selected"
-                android:src="@android:drawable/ic_menu_save"
-                app:tint="@color/colorAccentCyan" />
+                <TextView
+                    android:id="@+id/tv_selection_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="0 selected"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btn_selection_remove"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Remove selected"
-                android:src="@android:drawable/ic_menu_delete"
-                app:tint="@color/color_error" />
+                <Button
+                    android:id="@+id/btn_select_all"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select All"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorAccentCyan"
+                    android:textSize="14sp" />
 
-        </LinearLayout>
+                <ImageButton
+                    android:id="@+id/btn_selection_export"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Export selected"
+                    android:src="@android:drawable/ic_menu_save"
+                    app:tint="@color/colorAccentCyan" />
+
+                <ImageButton
+                    android:id="@+id/btn_selection_remove"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Remove selected"
+                    android:src="@android:drawable/ic_menu_delete"
+                    app:tint="@color/color_error" />
+
+            </LinearLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_entries"
@@ -102,7 +108,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintTop_toBottomOf="@id/appbar_layout"
             tools:listitem="@layout/item_setlist_entry" />
 
         <TextView

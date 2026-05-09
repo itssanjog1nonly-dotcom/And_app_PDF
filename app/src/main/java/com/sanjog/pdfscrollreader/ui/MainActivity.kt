@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity(),
             insets
         }
 
+        // Enable true fullscreen immersive mode for the entire app
+        setImmersiveMode(true)
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, FilePickerFragment())
@@ -55,8 +58,10 @@ class MainActivity : AppCompatActivity(),
                 if (supportFragmentManager.backStackEntryCount > 0) {
                     supportFragmentManager.popBackStack()
                     binding.toolbar.subtitle = "Tap folder to open PDF"
-                    // Restore non-immersive mode when leaving PDF viewer
-                    setImmersiveMode(false)
+                    
+                    // Restore app toolbar visibility when leaving PDF viewer
+                    binding.toolbar.visibility = View.VISIBLE
+                    (binding.toolbar.parent as? View)?.visibility = View.VISIBLE
                 } else {
                     isEnabled = false
                     onBackPressedDispatcher.onBackPressed()
@@ -115,6 +120,10 @@ class MainActivity : AppCompatActivity(),
     private fun showPdf(uri: Uri, setlistId: String? = null, entryId: String? = null) {
         binding.toolbar.subtitle = null
         
+        // Hide app toolbar for PDF viewer
+        binding.toolbar.visibility = View.GONE
+        (binding.toolbar.parent as? View)?.visibility = View.GONE
+        
         // Record in recently opened
         com.sanjog.pdfscrollreader.data.repository.RecentlyOpenedRepository(this).recordOpen(uri)
         
@@ -123,33 +132,21 @@ class MainActivity : AppCompatActivity(),
             .replace(R.id.fragment_container, fragment)
             .addToBackStack("pdf_viewer")
             .commit()
-        
-        // Enter immersive mode for PDF viewing
-        setImmersiveMode(true)
     }
 
     /**
-     * Toggle true fullscreen immersive mode.
-     * Hides status bar, navigation bar, and the app's own toolbar.
+     * Toggle true fullscreen immersive mode for system bars.
      */
     fun setImmersiveMode(enabled: Boolean) {
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         if (enabled) {
-            // Hide system bars
             insetsController.hide(WindowInsetsCompat.Type.systemBars())
             insetsController.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            // Hide app toolbar
-            binding.toolbar.visibility = View.GONE
-            (binding.toolbar.parent as? View)?.visibility = View.GONE // AppBarLayout
         } else {
-            // Show system bars
             insetsController.show(WindowInsetsCompat.Type.systemBars())
             insetsController.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
-            // Show app toolbar
-            (binding.toolbar.parent as? View)?.visibility = View.VISIBLE
-            binding.toolbar.visibility = View.VISIBLE
         }
     }
 }
