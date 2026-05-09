@@ -4,7 +4,7 @@ A musician-focused Android PDF reader optimized for live performance. Features d
 
 ## 📱 About The Project
 
-As a musician, I needed a way to read sheet music and chord charts hands-free while performing, and a way to take quick, permanent notes during rehearsals. Existing apps were either too expensive, lacked smooth auto-scroll, or had poor stylus support. 
+As a musician, I needed a way to read sheet music and chord charts hands-free while performing, and a way to take quick, permanent notes during rehearsals. I did not found any existing apps for such purpose, some apps either lacked smooth auto-scroll, or had poor stylus support. 
 
 I built **PdfScrollReader** to solve this. It allows users to import PDFs, calculate precise auto-scroll speeds based on song duration, draw high-fidelity annotations using a stylus, and export those annotations permanently burned into the PDF.
 
@@ -16,7 +16,12 @@ I built **PdfScrollReader** to solve this. It allows users to import PDFs, calcu
 *   **Persistent State:** Utilizes `Gson` and Kotlin Coroutines for safe, lifecycle-aware background saving of UI coordinates and tool preferences.
 
 ## 📸 Screenshots
-*(Placeholder: Add screenshots of the File Picker, the Auto-Scroll UI, and the Annotation Tools here)*
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS1.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS2.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS3.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS4.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS5.jpg)
+![image alt](https://github.com/itssanjog1nonly-dotcom/And_app_PDF/blob/913a658d8d257a9d3ec47b4ce960605e02219e1d/SS6.jpg)
 
 ## 🛠 Built With
 *   **Kotlin** - Primary programming language.
